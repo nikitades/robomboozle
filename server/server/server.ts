@@ -4,6 +4,7 @@ import * as express from "express";
 import * as Split from "stream-split";
 import * as io from "socket.io";
 import args from "./argparser";
+import handleWatcherEvents from "./handleWatcherEvents";
 
 const app = express();
 const httpServer = createHttpServer(app);
@@ -11,6 +12,7 @@ app.use(express.static("../public"));
 httpServer.listen(args["httpPort"]);
 console.log("http server listens at " + args["httpPort"]);
 const ws = io(httpServer);
+//TODO: create a steerwheel websocket connection
 const piws = io(httpServer, {
     path: "/" + args["piSecret"]
 })
@@ -20,10 +22,9 @@ const splitter = new Split(NALSeparator);
 
 let piConnected = 0;
 
-ws.on('connection', (socket: io.Socket) => {
-    console.log(`Watcher connected: ${socket.conn.remoteAddress}`)
-});
+handleWatcherEvents(ws);
 
+//TODO: move the pi-ws events to the separate function
 piws.on("connection", (socket: io.Socket) => {
     if (piConnected > 0) {
         console.log(`Robot connection refused, already have one`);

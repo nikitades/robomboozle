@@ -6,10 +6,11 @@ export interface IRoboCommand {
 }
 
 abstract class RoboCommand implements IRoboCommand {
-    public readonly code: string;
+    public static readonly prefix: string = "rbcmd";
+    public static readonly code: string;
 
-    public toString(): string {
-        return this.code;
+    public static getCode(): string {
+        return `${RoboCommand.prefix}_${this.code}`;
     }
 
     public apply() {
