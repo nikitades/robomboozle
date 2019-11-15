@@ -2,6 +2,7 @@ import "./styles/main.css";
 import "./styles/reset.css";
 import "./libs/broadway/Decoder";
 import "./libs/broadway/YUVCanvas";
+import { MoveCommand, BamboozleCommand, IRoboCommand } from "../../../common/commands";
 import * as Player from "./libs/broadway/Player";
 import * as io from 'socket.io-client';
 import { create, EventData, JoystickOutputData } from 'nipplejs';
@@ -23,11 +24,13 @@ socket.on("nalucast", function (data) {
     player.decode(new Uint8Array(data));
 });
 
+const apply = (cmd: IRoboCommand) => {
+    socket.emit(cmd.toString(), cmd);
+};
+
 const nippleManager = create({
     dataOnly: false
 });
-
-console.log({nippleManager});
 
 // nippleManager.on("added", (event: EventData, nipple: JoystickOutputData) => {
 //     console.log(nipple);
@@ -35,6 +38,14 @@ console.log({nippleManager});
 //         console.log("Zhopa");
 //     });
 // });
+
+window['testForward'] = () => {
+    apply(new MoveCommand(10, 90, 70, 0));
+};
+
+window['testBamboozle'] = () => {
+    apply(new BamboozleCommand(100));
+};
 
 nippleManager.on("move", (event: EventData, data: JoystickOutputData) => {
     console.log("Zhopa", data, event);

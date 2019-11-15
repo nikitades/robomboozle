@@ -5,11 +5,8 @@ export interface IRoboCommand {
     apply(): void;
 }
 
-class RoboCommand implements IRoboCommand {
-    constructor(code: string) {
-        this.code = code;
-    }
-    private code: string;
+abstract class RoboCommand implements IRoboCommand {
+    public readonly code: string;
 
     public toString(): string {
         return this.code;
@@ -22,19 +19,19 @@ class RoboCommand implements IRoboCommand {
 
 export class MoveCommand extends RoboCommand {
     constructor(
-        code: string,
         left: PwmValue,
         right: PwmValue,
         forward: PwmValue,
         backward: PwmValue
     ) {
-        super(code);
+        super();
         this.left = left;
         this.right = right;
         this.forward = forward;
         this.backward = backward;
     }
 
+    public readonly code: string = "move";
     public readonly left: PwmValue;
     public readonly right: PwmValue;
     public readonly forward: PwmValue;
@@ -42,11 +39,12 @@ export class MoveCommand extends RoboCommand {
 }
 
 export class BamboozleCommand extends RoboCommand {
-    constructor(code: string, bamboozlePower: PwmValue) {
-        super(code);
+    constructor(bamboozlePower: PwmValue) {
+        super();
         this.bamboozlePower = bamboozlePower;
     }
 
+    public readonly code: string = "bamboozle";
     public readonly bamboozlePower: PwmValue;
 }
 
