@@ -1,0 +1,32 @@
+{
+  "name": "robomboozle-webclient",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^12.12.7",
+    "@types/socket.io": "^2.1.4",
+    "@types/socket.io-client": "^1.4.32",
+    "@types/webpack": "^4.39.8",
+    "path": "^0.12.7",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.5.0",
+    "typescript": "^3.7.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^1.0.0"
+  }
+}

@@ -1,0 +1,22 @@
+@media(orientation: lanscape) {
+    #content {
+        width: 70%;
+        max-width: 60vw;
+    }
+
+    #controls {
+        width: 30%;
+        height: 300px;
+        background: red;
+    }
+}
+
+@media(orientation: portrait) {
+    #content {
+        width: 100%;
+    }
+
+    #omegaCanvas {
+        width: 100% !important;
+    }    
+}
