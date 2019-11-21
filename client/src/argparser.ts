@@ -1,4 +1,4 @@
-import { ArgumentParser } from "./node_modules/@types/argparse";
+import { ArgumentParser } from "argparse";
 const parser = new ArgumentParser({
     version: '0.0.1',
     addHelp: true,

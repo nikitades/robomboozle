@@ -4,15 +4,20 @@ import * as express from "express";
 import * as Split from "stream-split";
 import * as io from "socket.io";
 import args from "./argparser";
-import handleWatcherEvents from "./handleWatcherEvents";
+import { MoveCommand, BamboozleCommand } from "../../common/commands";
+import { PwmController } from "./pwmcontroller";
 
 const app = express();
 const httpServer = createHttpServer(app);
+
 app.use(express.static("../public"));
 httpServer.listen(args["httpPort"]);
 console.log("http server listens at " + args["httpPort"]);
+
 const ws = io(httpServer);
-//TODO: create a steerwheel websocket connection
+const streemanWs = io(httpServer, {
+    path: "/" + args["steerSecter"]
+});
 const piws = io(httpServer, {
     path: "/" + args["piSecret"]
 })
@@ -22,9 +27,13 @@ const splitter = new Split(NALSeparator);
 
 let piConnected = 0;
 
-handleWatcherEvents(ws);
+//TODO: заменить на steermanWs
+ws.on('connection', (socket: io.Socket) => {
+    console.log(`Watcher connected: ${socket.conn.remoteAddress}`)
+    MoveCommand.createListeners(socket);
+    BamboozleCommand.createListeners(socket);
+});
 
-//TODO: move the pi-ws events to the separate function
 piws.on("connection", (socket: io.Socket) => {
     if (piConnected > 0) {
         console.log(`Robot connection refused, already have one`);
@@ -35,11 +44,11 @@ piws.on("connection", (socket: io.Socket) => {
     socket.on("tmp", (data: any) => {
         ws.emit("tmp", data);
     });
-});
 
-piws.on("disconnect", (socket: io.Socket) => {
-    console.log(`Robot disconnected: ${socket.conn.remoteAddress}`);
-    piConnected--;
+    socket.on("disconnect", () => {
+        console.log(`Robot disconnected: ${socket.conn.remoteAddress}`);
+        piConnected--;
+    });
 });
 
 const streamServer = createTcpServer((socket: Socket) => {
@@ -54,3 +63,5 @@ const listenOptions: ListenOptions = {
     port: args["tcpPort"]
 }
 streamServer.listen(listenOptions);
+
+PwmController.run();

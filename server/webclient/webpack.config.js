@@ -34,6 +34,9 @@ const config = {
       { test: /\.tsx?$/, loader: "ts-loader" }
     ],
   },
+  resolve: {
+    extensions: ['.ts', ".tsx", '.js', '.json']
+  }
 };
 
 module.exports = config;

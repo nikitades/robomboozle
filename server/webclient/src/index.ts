@@ -8,7 +8,7 @@ import * as io from 'socket.io-client';
 import { create, EventData, JoystickOutputData } from 'nipplejs';
 
 const player = new Player({
-    useWorker: true,
+    useWorker: false,
     workerFile: "/js/libs/Decoder.js",
     webgl: true,
     size: { width: 640, height: 480 }
@@ -25,7 +25,12 @@ socket.on("nalucast", function (data) {
 });
 
 const apply = (cmd: IRoboCommand) => {
-    socket.emit(cmd.toString(), cmd);
+    console.log({
+        "str": cmd.code,
+        "orig": cmd,
+        "conc": cmd + ""
+    });
+    socket.emit(cmd.code, cmd);
 };
 
 const nippleManager = create({

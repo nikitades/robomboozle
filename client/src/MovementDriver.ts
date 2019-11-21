@@ -1,4 +1,4 @@
-import { IRoboCommand } from "../common/commands";
+import { IRoboCommand } from "../../common/commands";
 
 export class MovementDriver {
     constructor() {
