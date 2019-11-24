@@ -2,3 +2,4 @@
 dist
 node_modules
 SERVER/public/js/bundle*.js
+SERVER/public/*.html

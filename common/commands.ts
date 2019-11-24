@@ -1,7 +1,7 @@
 //TODO: Split the file...
 
 import { Socket } from "socket.io";
-import { PwmController } from "../server/server/pwmcontroller";
+import { PwmController } from "../client/src/pwmcontroller";
 
 export interface IRoboCommand {
     readonly code: string;
@@ -18,7 +18,7 @@ export abstract class RoboCommand implements IRoboCommand {
         throw new Error("Not implemented");
     }
 
-    public static createListeners(socket: Socket): void {
+    public static createClientListeners(socket: Socket): void {
         throw new Error("Not impelemnted");
     };
 }
@@ -45,12 +45,8 @@ export class MoveCommand extends RoboCommand {
     public readonly forward: PwmValue;
     public readonly backward: PwmValue;
 
-    public static createListeners(socket: Socket): void {
-        socket.on(this.code, (cmd: MoveCommand) => {
-            console.log("le movement");
-            console.log(cmd.backward, cmd.forward, cmd.right, cmd.left);
-            PwmController.movements.push(cmd);
-        });
+    public static createClientListeners(socket: Socket): void {
+        socket.on(this.code, PwmController.push.bind(PwmController));
     }
 }
 
@@ -63,14 +59,10 @@ export class BamboozleCommand extends RoboCommand {
     public static readonly code: string = MoveCommand.prefix + "_bamboozle";
     public code: string = BamboozleCommand.code;
 
-    public readonly bamboozlePower: PwmValue;
+    public readonly bamboozlePower: PwmValue = 100;
 
-    public static createListeners(socket: Socket): void {
-        socket.on(this.code, (cmd: BamboozleCommand) => {
-            console.log("le bamboozle");
-            console.log(cmd);
-            PwmController.bamboozling.push(cmd);
-        });
+    public static createClientListeners(socket: Socket): void {
+        socket.on(this.code, PwmController.push.bind(PwmController));
     }
 }
 

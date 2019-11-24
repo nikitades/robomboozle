@@ -3,6 +3,7 @@ import "./styles/reset.css";
 import "./libs/broadway/Decoder";
 import "./libs/broadway/YUVCanvas";
 import { MoveCommand, BamboozleCommand, IRoboCommand } from "../../../common/commands";
+import Params from "../../../common/params";
 import * as Player from "./libs/broadway/Player";
 import * as io from 'socket.io-client';
 import { create, EventData, JoystickOutputData } from 'nipplejs';
@@ -34,7 +35,8 @@ const apply = (cmd: IRoboCommand) => {
 };
 
 const nippleManager = create({
-    dataOnly: false
+    dataOnly: false,
+    zone: document.getElementById("joystick")
 });
 
 // nippleManager.on("added", (event: EventData, nipple: JoystickOutputData) => {
@@ -55,3 +57,14 @@ window['testBamboozle'] = () => {
 nippleManager.on("move", (event: EventData, data: JoystickOutputData) => {
     console.log("Zhopa", data, event);
 });
+
+const tick: number = Params.tickRate;
+
+const bambutton = document.getElementById("bamboozle");
+let bambInterval;
+bambutton.onmousedown = event => {
+    bambInterval = setInterval(window["testBamboozle"], tick)
+}
+bambutton.onmouseup = event => {
+    clearInterval(bambInterval);
+}

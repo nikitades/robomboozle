@@ -20,3 +20,8 @@
         width: 100% !important;
     }    
 }
+
+#bamboozle {
+    background: red;
+    font-size: larger;
+}

@@ -5,7 +5,6 @@ import * as Split from "stream-split";
 import * as io from "socket.io";
 import args from "./argparser";
 import { MoveCommand, BamboozleCommand } from "../../common/commands";
-import { PwmController } from "./pwmcontroller";
 
 const app = express();
 const httpServer = createHttpServer(app);
@@ -30,8 +29,10 @@ let piConnected = 0;
 //TODO: заменить на steermanWs
 ws.on('connection', (socket: io.Socket) => {
     console.log(`Watcher connected: ${socket.conn.remoteAddress}`)
-    MoveCommand.createListeners(socket);
-    BamboozleCommand.createListeners(socket);
+    /* TODO:
+    MoveCommand.createServerListeners(socket);
+    BamboozleCommand.createServerListeners(socket);
+    */
 });
 
 piws.on("connection", (socket: io.Socket) => {
@@ -63,5 +64,3 @@ const listenOptions: ListenOptions = {
     port: args["tcpPort"]
 }
 streamServer.listen(listenOptions);
-
-PwmController.run();
