@@ -15,7 +15,7 @@ console.log("http server listens at " + args["httpPort"]);
 
 const ws = io(httpServer);
 const streemanWs = io(httpServer, {
-    path: "/" + args["steerSecter"]
+    path: "/" + args["steerSecret"]
 });
 const piws = io(httpServer, {
     path: "/" + args["piSecret"]
@@ -26,13 +26,19 @@ const splitter = new Split(NALSeparator);
 
 let piConnected = 0;
 
-//TODO: заменить на steermanWs
 ws.on('connection', (socket: io.Socket) => {
+    socket.on(BamboozleCommand.code, (cmd: BamboozleCommand) => {
+        piws.emit(BamboozleCommand.code, cmd);
+    });
+    socket.on(MoveCommand.code, (cmd: MoveCommand) => {
+        piws.emit(MoveCommand.code, cmd);
+    })
     console.log(`Watcher connected: ${socket.conn.remoteAddress}`)
-    /* TODO:
-    MoveCommand.createServerListeners(socket);
-    BamboozleCommand.createServerListeners(socket);
-    */
+});
+
+//TODO: перенести команды управления в steerman
+streemanWs.on('connection', (socket: io.Socket) => {
+    console.log(`Steerman connected: ${socket.conn.remoteAddress}`);
 });
 
 piws.on("connection", (socket: io.Socket) => {

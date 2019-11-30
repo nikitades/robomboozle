@@ -4,6 +4,7 @@ import { createReadStream } from "fs";
 import { Readable } from "stream";
 import * as SocketIOClient from "socket.io-client";
 import { Socket as TcpSocket } from "net";
+import { MoveCommand, BamboozleCommand } from "../../common/commands";
 
 /**
  * It's the class for duplex network interaction.
@@ -164,9 +165,8 @@ export class RaspividTransmitter {
      * Here the server tells the robot what it has to do.
      */
     private listenForWsCommands(): void {
-        this.wsClient.on("commandSet", (data: any) => {
-            //TODO: decide on how to accept a command set
-        });
+        MoveCommand.createClientListeners(this.wsClient);
+        BamboozleCommand.createClientListeners(this.wsClient); //TODO тут
     }
 
     /**

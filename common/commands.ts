@@ -1,6 +1,5 @@
 //TODO: Split the file...
 
-import { Socket } from "socket.io";
 import { PwmController } from "../client/src/pwmcontroller";
 
 export interface IRoboCommand {
@@ -18,7 +17,7 @@ export abstract class RoboCommand implements IRoboCommand {
         throw new Error("Not implemented");
     }
 
-    public static createClientListeners(socket: Socket): void {
+    public static createClientListeners(socket: any): void {
         throw new Error("Not impelemnted");
     };
 }
@@ -45,7 +44,7 @@ export class MoveCommand extends RoboCommand {
     public readonly forward: PwmValue;
     public readonly backward: PwmValue;
 
-    public static createClientListeners(socket: Socket): void {
+    public static createClientListeners(socket: any): void {
         socket.on(this.code, PwmController.push.bind(PwmController));
     }
 }
@@ -61,7 +60,12 @@ export class BamboozleCommand extends RoboCommand {
 
     public readonly bamboozlePower: PwmValue = 100;
 
-    public static createClientListeners(socket: Socket): void {
+    /**
+     * Takes the web socket and binds the SoC-related actions on its commands
+     * 
+     * @param socket 
+     */
+    public static createClientListeners(socket: any): void {
         socket.on(this.code, PwmController.push.bind(PwmController));
     }
 }
