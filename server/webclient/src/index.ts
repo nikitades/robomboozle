@@ -19,7 +19,9 @@ var container = document.getElementById("content");
 player.canvas.id = "omegaCanvas";
 container.appendChild(player.canvas);
 
-const socket = io("http://" + document.location.host);
+const socket = io("http://" + document.location.host, {
+    path: "/fedcba"
+});
 
 socket.on("nalucast", function (data) {
     player.decode(new Uint8Array(data));

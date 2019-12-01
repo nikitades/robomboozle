@@ -27,17 +27,17 @@ const splitter = new Split(NALSeparator);
 let piConnected = 0;
 
 ws.on('connection', (socket: io.Socket) => {
-    socket.on(BamboozleCommand.code, (cmd: BamboozleCommand) => {
-        piws.emit(BamboozleCommand.code, cmd);
-    });
-    socket.on(MoveCommand.code, (cmd: MoveCommand) => {
-        piws.emit(MoveCommand.code, cmd);
-    })
     console.log(`Watcher connected: ${socket.conn.remoteAddress}`)
 });
 
 //TODO: перенести команды управления в steerman
 streemanWs.on('connection', (socket: io.Socket) => {
+    socket.on(BamboozleCommand.code, (cmd: BamboozleCommand) => {
+        piws.emit(BamboozleCommand.code, cmd);
+    });
+    socket.on(MoveCommand.code, (cmd: MoveCommand) => {
+        piws.emit(MoveCommand.code, cmd);
+    });
     console.log(`Steerman connected: ${socket.conn.remoteAddress}`);
 });
 
