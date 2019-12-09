@@ -30,7 +30,6 @@ ws.on('connection', (socket: io.Socket) => {
     console.log(`Watcher connected: ${socket.conn.remoteAddress}`)
 });
 
-//TODO: перенести команды управления в steerman
 streemanWs.on('connection', (socket: io.Socket) => {
     socket.on(BamboozleCommand.code, (cmd: BamboozleCommand) => {
         piws.emit(BamboozleCommand.code, cmd);

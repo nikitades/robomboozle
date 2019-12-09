@@ -11,13 +11,10 @@ export class PwmController {
     private static registry: ICommandsRegistry = new CommandsRegistry();
     private static bambMaster: BamboozleMaster = new BamboozleMaster();
 
-    // private static bamboozleGpio: 
-
     private static bamboozle(cmd: BamboozleCommand): void {
         this.registry.setActive(cmd);
-        console.log('started bamb');
+        this.bambMaster.apply(cmd);
         setTimeout(this.registry.clear.bind(this.registry, cmd.code), this.tick);
-        //pigpio -> pwm 100
     }
 
     private static stopBamboozle(): void {
