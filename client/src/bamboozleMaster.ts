@@ -1,34 +1,34 @@
-import { BamboozleCommand } from "../../common/commands";
+import { BamboozleCommand, PwmValue, ServoValue } from "../../common/commands";
 
 enum BamboozleDirection {
     down,
     up
 }
 
+//Class to calculate PWM degree over the time
 export class BamboozleMaster {
-    private prevDutyValue: number = 0;
     private direction: BamboozleDirection = BamboozleDirection.up;
-    private maxDutyValue: number = 15;
-
-    public apply(cmd: BamboozleCommand): void {
-        const val = this.getNewDutyValue();
-        console.log(`SETTING BAMB PWM: ${val}`);
-    }
+    private BASE: number = 500;
+    private STEP: number = 500;
+    private MAX: number = 2500;
+    private prevDutyValue: number = this.BASE;
 
     /**
-     * Calculates the new bamboozling stick position. It should go 0-15-0-15-0-15...
+     * Calculates the new bamboozling stick position. It should go 500-2500-500-2500-500-2500...
      * 
      * @returns number
      */
-    private getNewDutyValue(): number {
-        if (this.prevDutyValue == 0) {
+    public getNewDutyValue(): ServoValue {
+        if (this.prevDutyValue == this.BASE) {
             this.direction = BamboozleDirection.up - this.direction;
-            return this.prevDutyValue = 1;
+            return this.prevDutyValue = this.BASE + this.STEP;
         }
-        if (this.prevDutyValue == this.maxDutyValue) {
+        if (this.prevDutyValue == this.MAX) {
             this.direction = BamboozleDirection.up - this.direction;
-            return this.prevDutyValue = this.maxDutyValue - 1;
+            return this.prevDutyValue = this.MAX - this.STEP;
         }
-        return this.direction == BamboozleDirection.up ? this.prevDutyValue = ++this.prevDutyValue : this.prevDutyValue = --this.prevDutyValue;
+        return this.direction == BamboozleDirection.up
+            ? this.prevDutyValue = this.prevDutyValue + this.STEP
+            : this.prevDutyValue = this.prevDutyValue - this.STEP;
     }
 }

@@ -2,7 +2,7 @@ import "./styles/main.css";
 import "./styles/reset.css";
 import "./libs/broadway/Decoder";
 import "./libs/broadway/YUVCanvas";
-import { MoveCommand, BamboozleCommand, IRoboCommand } from "../../../common/commands";
+import { MoveCommand, BamboozleCommand, IRoboCommand, PwmValue, ServoValue } from "../../../common/commands";
 import Params from "../../../common/params";
 import * as Player from "./libs/broadway/Player";
 import * as io from 'socket.io-client';
@@ -31,7 +31,7 @@ const apply = (cmd: IRoboCommand) => {
     console.log({
         "str": cmd.code,
         "orig": cmd,
-        "conc": cmd + ""
+        "conc": cmd + "",
     });
     socket.emit(cmd.code, cmd);
 };
@@ -41,32 +41,40 @@ const nippleManager = create({
     zone: document.getElementById("joystick")
 });
 
-// nippleManager.on("added", (event: EventData, nipple: JoystickOutputData) => {
-//     console.log(nipple);
-//     nipple.on("move", (data: JoystickOutputData) => {
-//         console.log("Zhopa");
-//     });
-// });
-
-window['testForward'] = () => {
-    apply(new MoveCommand(10, 90, 70, 0));
-};
-
 window['testBamboozle'] = () => {
-    apply(new BamboozleCommand(100));
+    apply(new BamboozleCommand());
 };
 
-nippleManager.on("move", (event: EventData, data: JoystickOutputData) => {
-    console.log("Zhopa", data, event);
+let moveInterval;
+let curMoveCmd: MoveCommand;
+
+nippleManager.on("start", (event: EventData, data: JoystickOutputData) => {
+    moveInterval = setInterval(() => {
+        if (!curMoveCmd) return;
+        apply(curMoveCmd);
+    }, Params.tickRate);
 });
 
-const tick: number = Params.tickRate;
+nippleManager.on("move", (event: EventData, data: JoystickOutputData) => {
+    if (!curMoveCmd) {
+        curMoveCmd = new MoveCommand(data.angle.degree, data.distance * 2, data.angle.degree <= 180);
+    } else {
+        curMoveCmd.angle = data.angle.degree;
+        curMoveCmd.speed = data.distance * 2;
+        curMoveCmd.direction = data.angle.degree <= 180;
+    }
+});
+
+nippleManager.on("end", (event: EventData, data: JoystickOutputData) => {
+    clearInterval(moveInterval);
+});
 
 const bambutton = document.getElementById("bamboozle");
 let bambInterval;
 bambutton.onmousedown = event => {
-    bambInterval = setInterval(window["testBamboozle"], tick)
+    bambInterval = setInterval(window["testBamboozle"], Params.tickRate)
 }
 bambutton.onmouseup = event => {
     clearInterval(bambInterval);
 }
+

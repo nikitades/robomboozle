@@ -5,9 +5,10 @@ import { Readable } from "stream";
 import * as SocketIOClient from "socket.io-client";
 import { Socket as TcpSocket } from "net";
 import { MoveCommand, BamboozleCommand } from "../../common/commands";
+import { PwmController } from "./PwmController";
 
 /**
- * It's the class for duplex network interaction.
+ * It's a class for the two-side network interaction.
  * This app sends the video stream to some server.
  * And then listens for the websocket commands from this (or another) server.
  * 
@@ -87,7 +88,7 @@ export class RaspividTransmitter {
             '-w', this.raspividParams.width.toString(),
             '-h', this.raspividParams.height.toString(),
             '-fps', this.raspividParams.fps.toString(),
-            '-pf', "baseline"//'baseline'
+            '-pf', "baseline"
         ];
 
         console.log("raspivid " + args.join(" "));
@@ -156,7 +157,6 @@ export class RaspividTransmitter {
      * @param chunk 
      */
     private stream(chunk: any): void {
-        console.log(chunk); //TODO: remove
         this.tcpClient.write(chunk);
     }
 
@@ -165,8 +165,8 @@ export class RaspividTransmitter {
      * Here the server tells the robot what it has to do.
      */
     private listenForWsCommands(): void {
-        MoveCommand.createClientListeners(this.wsClient);
-        BamboozleCommand.createClientListeners(this.wsClient); //TODO тут
+        this.wsClient.on(MoveCommand.code, PwmController.push.bind(PwmController));
+        this.wsClient.on(BamboozleCommand.code, PwmController.push.bind(PwmController));
     }
 
     /**

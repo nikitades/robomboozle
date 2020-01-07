@@ -1,6 +1,6 @@
 import { RaspividTransmitter, RaspividParams, TransmitterParams } from "./RaspividTransmitter";
 import args from "./argparser"
-import { PwmController } from "./pwmcontroller";
+import { PwmController } from "./PwmController";
 
 const wrapper = new RaspividTransmitter(
     new TransmitterParams(

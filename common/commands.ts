@@ -1,7 +1,3 @@
-//TODO: Split the file...
-
-import { PwmController } from "../client/src/pwmcontroller";
-
 export interface IRoboCommand {
     readonly code: string;
     apply(): void;
@@ -24,56 +20,51 @@ export abstract class RoboCommand implements IRoboCommand {
 
 export class MoveCommand extends RoboCommand {
     constructor(
-        left: PwmValue,
-        right: PwmValue,
-        forward: PwmValue,
-        backward: PwmValue
+        angle: number,
+        speed: number,
+        direction: boolean
     ) {
         super();
-        this.left = left;
-        this.right = right;
-        this.forward = forward;
-        this.backward = backward;
+        this.angle = angle;
+        this.speed = speed;
+        this.direction = direction;
     }
+
+    public static readonly DIR_F = true;
+    public static readonly DIR_B = false;
 
     public static readonly code = MoveCommand.prefix + "_move";
     public readonly code: string = MoveCommand.code;
 
-    public readonly left: PwmValue;
-    public readonly right: PwmValue;
-    public readonly forward: PwmValue;
-    public readonly backward: PwmValue;
-
-    public static createClientListeners(socket: any): void {
-        socket.on(this.code, PwmController.push.bind(PwmController));
-    }
+    public angle: number = 90; //0-360
+    public speed: number = 0; //0-50
+    public direction: boolean = MoveCommand.DIR_F;
 }
 
 export class BamboozleCommand extends RoboCommand {
-    constructor(bamboozlePower: PwmValue) {
-        super();
-        this.bamboozlePower = bamboozlePower;
-    }
 
     public static readonly code: string = MoveCommand.prefix + "_bamboozle";
     public code: string = BamboozleCommand.code;
-
-    public readonly bamboozlePower: PwmValue = 100;
-
-    /**
-     * Takes the web socket and binds the SoC-related actions on its commands
-     * 
-     * @param socket 
-     */
-    public static createClientListeners(socket: any): void {
-        socket.on(this.code, PwmController.push.bind(PwmController));
-    }
 }
 
 export class PwmValue extends Number {
+
+    public static max: Number = 100;
+
     constructor(value: number) {
-        if (value > 100) {
+        if (value > PwmValue.max) {
             throw new Error("The PWM value is too big! (" + value + ")");
+        }
+        super(value);
+    }
+}
+
+export class ServoValue extends Number {
+    public static max: Number = 2500;
+
+    constructor(value: number) {
+        if (value > PwmValue.max) {
+            throw new Error("The Servo value is too big! (" + value + ")");
         }
         super(value);
     }

@@ -1,3 +1,3 @@
 export default class Params {
-    public static tickRate: number = 10;
+    public static tickRate: number = 50;
 };
