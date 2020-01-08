@@ -11,7 +11,7 @@ const { CleanWebpackPlugin } = require('./node_modules/clean-webpack-plugin/dist
 
 const config = {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, "..", "public", "js"),
     filename: 'bundle.[hash].min.js'
@@ -31,11 +31,18 @@ const config = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
       { test: /\.tsx?$/, loader: "ts-loader" }
     ],
   },
   resolve: {
-    extensions: ['.ts', ".tsx", '.js', '.json']
+    extensions: ['.js', '.json', '.ts', ".tsx"]
   }
 };
 
