@@ -13,7 +13,9 @@ app.use(express.static("../public"));
 httpServer.listen(args["httpPort"]);
 console.log("http server listens at " + args["httpPort"]);
 
-const ws = io(httpServer);
+const ws = io(httpServer, {
+    path: "/" + args["watchSecret"]
+});
 const streemanWs = io(httpServer, {
     path: "/" + args["steerSecret"]
 });

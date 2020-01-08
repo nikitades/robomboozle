@@ -27,7 +27,7 @@ parser.addArgument(
 
 parser.addArgument(
     ["--watchSecret", "-w"],
-    { help: "A phrase or code allowing to watch the robot", required: false } //but you should better use itƒ
+    { help: "A phrase or code allowing to watch the robot", required: false } 
 )
 
 const args = parser.parseArgs();
