@@ -12,10 +12,8 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^12.12.7"
-  },
-  "dependencies": { 
+  "devDependencies": {},
+  "dependencies": {
     "@types/argparse": "^1.0.36",
     "@types/express": "^4.17.2",
     "@types/socket.io": "^2.1.4",
