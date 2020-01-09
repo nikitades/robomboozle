@@ -83,7 +83,7 @@ export class PwmController {
         }
     }
 
-    public static run(): void {
+    public static async run(): Promise<void> {
         const fuckdown = this.motors.stop.bind(this.motors, this.motors.NO1);
         const fuckdown2 = this.motors.stop.bind(this.motors, this.motors.NO2);
         process.on("SIGINT", function () {
