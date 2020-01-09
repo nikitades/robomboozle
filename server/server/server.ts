@@ -58,10 +58,12 @@ piws.on("connection", (socket: io.Socket) => {
 });
 
 const streamServer = createTcpServer((socket: Socket) => {
+    socket.on("connect", () => {
+        console.log("camera connected");
+    });
     socket.pipe(splitter).on("data", (data: any) => {
         const packet = Buffer.concat([NALSeparator, data]);
-        console.log(packet);
-        ws.emit("nalucast", packet);
+        streemanWs.emit("nalucast", packet);
     });
 });
 const listenOptions: ListenOptions = {
