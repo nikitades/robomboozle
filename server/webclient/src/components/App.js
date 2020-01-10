@@ -1,20 +1,16 @@
-import React, { Component } from "react";
+import React from 'react';
+import 'bulma/css/bulma.css'
+import '../styles/App.css';
+import ModeSelector from './ModeSelector';
+import SteermanUI from './SteermanUI';
 
-export default class App extends Component {
-
-    /**
-     * TODO:
-     * 1. React tutorial
-     * 2. Сделать древо компонентов
-     * 3. Сделать экран выбора режима
-     * 4. Сделать экран ввода пароля для просмотра
-     * 5. Сделать экран ввода пароля для управления
-     * 6. Сделать экран отказа при неверном пароле/отвале
-     * 7. Сделать экран просмотра
-     * 8. Сделать экран управления
-     */
-
-    render() {
-        return <h1>Kek</h1>;
-    }
+function App() {
+  return (
+    <div className="container">
+      {/* <ModeSelector /> */}
+      <SteermanUI />
+    </div>
+  );
 }
+
+export default App;

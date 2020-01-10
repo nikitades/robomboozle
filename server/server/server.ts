@@ -9,7 +9,7 @@ import { MoveCommand, BamboozleCommand } from "../../common/commands";
 const app = express();
 const httpServer = createHttpServer(app);
 
-app.use(express.static("../public"));
+app.use(express.static("../webclient/build"));
 httpServer.listen(args["httpPort"]);
 console.log("http server listens at " + args["httpPort"]);
 
