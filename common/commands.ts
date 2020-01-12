@@ -46,26 +46,3 @@ export class BamboozleCommand extends RoboCommand {
     public static readonly code: string = MoveCommand.prefix + "_bamboozle";
     public code: string = BamboozleCommand.code;
 }
-
-export class PwmValue extends Number {
-
-    public static max: Number = 100;
-
-    constructor(value: number) {
-        if (value > PwmValue.max) {
-            throw new Error("The PWM value is too big! (" + value + ")");
-        }
-        super(value);
-    }
-}
-
-export class ServoValue extends Number {
-    public static max: Number = 2500;
-
-    constructor(value: number) {
-        if (value > PwmValue.max) {
-            throw new Error("The Servo value is too big! (" + value + ")");
-        }
-        super(value);
-    }
-}

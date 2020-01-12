@@ -31,7 +31,7 @@ export class RaspividTransmitter {
         }
 
         this.wsClient = SocketIOClient(`http://${this.transmitterParams.wsHost}:${this.transmitterParams.wsPort}`, {
-            path: "/" + this.transmitterParams.secret
+            path: "/robot/" + this.transmitterParams.secret
         });
         this.tcpClient = new TcpSocket().connect({
             port: Number(this.transmitterParams.tcpPort),

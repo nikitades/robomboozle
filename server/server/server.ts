@@ -14,13 +14,13 @@ httpServer.listen(args["httpPort"]);
 console.log("http server listens at " + args["httpPort"]);
 
 const ws = io(httpServer, {
-    path: "/" + args["watchSecret"]
+    path: "/watcher/" + args["watchSecret"]
 });
 const streemanWs = io(httpServer, {
-    path: "/" + args["steerSecret"]
+    path: "/steerman/" + args["steerSecret"]
 });
 const piws = io(httpServer, {
-    path: "/" + args["piSecret"]
+    path: "/robot/" + args["piSecret"]
 })
 
 const NALSeparator = Buffer.from([0, 0, 0, 1]);
