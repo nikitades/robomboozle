@@ -1,59 +1,8 @@
 import React from 'react';
-import SocketFactory from '../services/SocketFactory';
+import { connect } from "react-redux";
 import ModeSelectorLoginForm from './ModeSelectorLoginForm';
 
-export default class ModeSelector extends React.Component {
-    constructor(props) {
-        super(props);
-        this.connect = props.connect;
-    }
-
-    state = {
-        steerman: {
-            password: "",
-            isLogging: false,
-            error: "",
-        },
-        watcher: {
-            password: "",
-            isLogging: false,
-            error: "",
-        },
-    }
-
-    checkAndSetMode(mode, pwd) {
-        if (mode !== "steerman" && mode !== "watcher") {
-            throw new Error("Unexpected mode!");
-        }
-
-        this.setState({
-            [mode]: {
-                isLogging: true
-            }
-        });
-
-        let socket;
-        try {
-            socket = SocketFactory.connect(mode, pwd);
-            if (!socket.connected) {
-                throw new Error("Failed to connect!");
-            }
-        } catch (e) {
-            this.setState({
-                [mode]: {
-                    isLogging: false,
-                    error: e.message
-                }
-            });
-            return;
-        }
-        this.setState({
-            [mode]: {
-                isLogging: false
-            }
-        });
-        this.connect(mode, socket);
-    }
+class ModeSelector extends React.Component {
 
     render() {
         return <div className="ModeSelector">
@@ -71,16 +20,15 @@ export default class ModeSelector extends React.Component {
                                     <p className="title is-4">Family member</p>
                                 </div>
                             </div>
-                            <h1>{this.state.steerman.error}</h1>
-                            <ModeSelectorLoginForm />
+                            <ModeSelectorLoginForm mode={"steerman"} title={"Watch & control the robot."} />
                         </div>
                     </div>
                 </div>
-                {/* <div className="column">
+                <div className="column">
                     <div className="card">
                         <div className="card-image">
                             <figure className="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="This is how you watch the robot ride" />
+                                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="This is how you control the robot" />
                             </figure>
                         </div>
                         <div className="card-content">
@@ -89,24 +37,20 @@ export default class ModeSelector extends React.Component {
                                     <p className="title is-4">Dear guest</p>
                                 </div>
                             </div>
-
-                            <div className="content">
-                                Just watch.
-                                <br />
-                                <br />
-                                <div className="columns">
-                                    <div className="column">
-                                        <input className="input" type="text" name="watcherPassword" />
-                                    </div>
-                                    <div className="column">
-                                        <button className="button is-info">Enter password</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <ModeSelectorLoginForm mode={"watcher"} title={"Watch & control the robot."} />
                         </div>
                     </div>
-                </div> */}
+                </div>
             </div>
         </div>
     }
 }
+
+export default connect(
+    state => ({
+
+    }),
+    dispatch => ({
+
+    })
+)(ModeSelector);

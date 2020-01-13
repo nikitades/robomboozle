@@ -1,48 +1,50 @@
 import React from 'react';
+import { connect } from "react-redux";
+import { createSocket, typePassword } from "../store/actions";
 
-export default class ModeSelectorLoginForm extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.state.title = props.title;
-        this.state.mode = props.mode;
-        this.state.disabled = props.disabled;
-        this.state.pwd = props.pwd;
-        this.state.error = props.error;
-        this.onLogin = props.onLogin;
-        this.onType = props.onType;
+class ModeSelectorLoginForm extends React.PureComponent {
+
+    handleLogin(e) {
+        this.props.createSocket(this.props.mode, this.props.state[this.props.mode].password);
     }
 
-    state = {
-        title: "",
-        mode: "",
-        disabled: false,
-        pwd: "",
-        error: "",
+    handleType(e) {
+        this.props.typePassword(this.props.mode, e.target.value);
     }
 
     render() {
-        const blockErrorsClassName = "columns" + (!!this.error ? "" : " is-hidden");
+        const err = this.props.state[this.props.mode] ? this.props.state[this.props.mode].error : null;
+        const disabled = this.props.state[this.props.mode] ? this.props.state[this.props.mode].isLoggingIn ? true : false : false;
+        const blockErrorsClassName = "columns" + (err ? "" : " is-hidden");
         return <div className="content">
-            {blockErrorsClassName}
-            {this.error}
-            {this.title}
+            {this.props.title}
             <br />
             <br />
             <div className={blockErrorsClassName}>
                 <div className="column">
                     <div className="notification is-danger">
-                        {this.error}
+                        {err}
                     </div>
                 </div>
             </div>
             <div className="columns">
                 <div className="column">
-                    <input disabled={this.disabled} className="input" type="text" name="steermanPassword" value={this.pwd} onChange={this.onType} />
+                    <input disabled={disabled} className="input" type="text" name="steermanPassword" value={this.props.state[this.props.mode].password} onChange={this.handleType.bind(this)} />
                 </div>
                 <div className="column">
-                    <button disabled={this.disabled} onClick={this.onLogin} className="button is-primary">Enter password</button>
+                    <button disabled={disabled} onClick={this.handleLogin.bind(this)} className="button is-primary">Enter password</button>
                 </div>
             </div>
         </div>
     }
 }
+
+export default connect(
+    state => ({
+        state
+    }),
+    dispatch => ({
+        typePassword: (mode, newPwd) => dispatch(typePassword(mode, newPwd)),
+        createSocket: (mode, pwd) => dispatch(createSocket(mode, pwd)),
+    })
+)(ModeSelectorLoginForm);

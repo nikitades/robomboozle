@@ -1,5 +1,5 @@
 import React from 'react';
-import { observer } from "mobx-react";
+import { connect } from "react-redux";
 import 'bulma/css/bulma.css'
 import '../styles/App.css';
 import ModeSelector from './ModeSelector';
@@ -9,7 +9,6 @@ import WatcherUI from './WatcherUI';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.store = props.store;
     this.connect = this.connect.bind(this);
   }
 
@@ -21,9 +20,8 @@ class App extends React.Component {
   }
 
   render() {
-
     let content;
-    switch (this.state.selectedMode) {
+    switch (this.props.mode) {
       case "steerman":
         content = <SteermanUI />;
         break;
@@ -43,4 +41,11 @@ class App extends React.Component {
   }
 }
 
-export default observer(() => <App />);
+export default connect(
+  state => ({
+    mode: state.mode
+  }),
+  dispatch => ({
+
+  })
+)(App);
