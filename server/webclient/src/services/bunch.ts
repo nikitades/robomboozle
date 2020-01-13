@@ -1,5 +1,5 @@
-import { MoveCommand, BamboozleCommand, IRoboCommand } from "../../../../common/commands";
-import Params from "../../../../common/params";
+import { MoveCommand, BamboozleCommand, IRoboCommand } from "../common/commands";
+import Params from "../common/params";
 import * as io from 'socket.io-client';
 import { create, EventData, JoystickOutputData } from 'nipplejs';
 import BroadwayFactory from "./BroadwayFactory.js";

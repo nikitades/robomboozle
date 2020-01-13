@@ -1,3 +1,4 @@
+/* eslint-disable */
 // universal module definition
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {

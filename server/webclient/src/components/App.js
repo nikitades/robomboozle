@@ -34,7 +34,7 @@ class App extends React.Component {
     }
 
     return (
-      <div className="container">
+      <div className="app">
         {content}
       </div>
     );
@@ -46,6 +46,6 @@ export default connect(
     mode: state.mode
   }),
   dispatch => ({
-
+    
   })
 )(App);

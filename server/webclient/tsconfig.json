@@ -21,6 +21,6 @@
     "jsx": "react"
   },
   "include": [
-    "src"
+    "src", "config-overrides.js"
   ]
 }

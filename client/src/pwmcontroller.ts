@@ -1,5 +1,5 @@
-import { MoveCommand, BamboozleCommand, IRoboCommand, PwmValue } from "../../common/commands";
-import Params from "../../common/params";
+import { MoveCommand, BamboozleCommand, IRoboCommand } from "../../server/webclient/src/common/commands";
+import Params from "../../server/webclient/src/common/params";
 import { ICommandsRegistry, CommandsRegistry } from "./commandsRegistry";
 import { BamboozleMaster } from "./bamboozleMaster";
 import { Gpio } from "pigpio";

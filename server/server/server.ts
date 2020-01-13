@@ -4,7 +4,7 @@ import * as express from "express";
 import * as Split from "stream-split";
 import * as io from "socket.io";
 import args from "./argparser";
-import { MoveCommand, BamboozleCommand } from "../../common/commands";
+import { MoveCommand, BamboozleCommand } from "../webclient/src/common/commands";
 
 const app = express();
 const httpServer = createHttpServer(app);

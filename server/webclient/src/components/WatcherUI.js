@@ -1,5 +1,5 @@
 import React from 'react';
-import UI from "./UI";
+import UI from "./Video";
 
 export default class WatcherUI extends React.Component {
     render() {

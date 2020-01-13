@@ -1,4 +1,5 @@
-import { TYPE_PASSWORD, SELECT_MODE, BEGIN_LOGIN, FAILED_LOGIN } from "../actionTypes";
+import { TYPE_PASSWORD, SELECT_MODE, BEGIN_LOGIN, FAILED_LOGIN, CREATE_PLAYER, EXIT } from "../actionTypes";
+import BroadwayFactory from "../../services/BroadwayFactory";
 
 function getInitialPassword(mode) {
     try {
@@ -17,6 +18,7 @@ function getInitialPassword(mode) {
 const initialState = {
     mode: null,
     socket: null,
+    player: null,
     steerman: {
         password: getInitialPassword("steerman"),
         isLoggingIn: false,
@@ -62,6 +64,13 @@ function rootReducer(state = initialState, action) {
                     error: action.payload.err
                 }
             };
+        case CREATE_PLAYER:
+            return {
+                ...state,
+                player: BroadwayFactory.getPlayer(action.payload.w, action.payload.h)
+            }
+        case EXIT:
+            return initialState;
         default:
             return state;
     }
