@@ -24,9 +24,6 @@ const piws = io(httpServer, {
     path: "/robot/" + args["piSecret"]
 })
 
-const NALSeparator = Buffer.from([0, 0, 0, 1]);
-const splitter = new Split(NALSeparator);
-
 let piConnected = 0;
 let watchersConnected = 0;
 
@@ -88,9 +85,10 @@ piws.on("connection", (socket: io.Socket) => {
 
 const streamServer = createTcpServer((socket: Socket) => {
     console.log("Camera connected: " + socket.remoteAddress);
+    const NALSeparator = Buffer.from([0, 0, 0, 1]);
+    const splitter = new Split(NALSeparator);
     socket.pipe(splitter).on("data", (data: any) => {
         const packet = Buffer.concat([NALSeparator, data]);
-        console.log("got packet");
         ws.emit("nalucast", packet);
         streemanWs.emit("nalucast", packet);
     });
