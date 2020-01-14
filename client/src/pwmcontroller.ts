@@ -34,7 +34,7 @@ export class PwmController {
 
     private static move(cmd: MoveCommand): void {
         this.registry.setActive(cmd);
-        console.log('started move');
+        console.log('started move'); 
 
         const clearAngle = cmd.angle < 180 ? cmd.angle : (cmd.angle - (cmd.angle - 180) * 2);
         const leftSpeed = clearAngle <= 90 ? cmd.speed : ((180 - cmd.angle) / 90) * cmd.speed;
@@ -83,7 +83,7 @@ export class PwmController {
         }
     }
 
-    public static async run(): Promise<void> {
+    public static run(): void {
         const fuckdown = this.motors.stop.bind(this.motors, this.motors.NO1);
         const fuckdown2 = this.motors.stop.bind(this.motors, this.motors.NO2);
         process.on("SIGINT", function () {

@@ -4,7 +4,7 @@ import * as express from "express";
 import * as Split from "stream-split";
 import * as io from "socket.io";
 import args from "./argparser";
-import { MoveCommand, BamboozleCommand } from "../webclient/src/common/commands";
+import { MoveCommand, BamboozleCommand, StartStreamCommand, StopStreamCommand, RestartStreamCommand } from "../webclient/src/common/commands";
 
 const app = express();
 const httpServer = createHttpServer(app);
@@ -19,6 +19,7 @@ const ws = io(httpServer, {
 const streemanWs = io(httpServer, {
     path: "/steerman/" + args["steerSecret"]
 });
+
 const piws = io(httpServer, {
     path: "/robot/" + args["piSecret"]
 })
@@ -27,19 +28,43 @@ const NALSeparator = Buffer.from([0, 0, 0, 1]);
 const splitter = new Split(NALSeparator);
 
 let piConnected = 0;
+let watchersConnected = 0;
 
-ws.on('connection', (socket: io.Socket) => {
-    console.log(`Watcher connected: ${socket.conn.remoteAddress}`)
-});
+const onClientConnection = (socket: io.Socket, role: string) => {
+    watchersConnected++;
+    if (watchersConnected === 1) {
+        console.log("first client - starting stream...");
+        piws.emit(StartStreamCommand.code, new StartStreamCommand());
+    } else {
+        console.log("one more client - restarting stream...");
+        piws.emit(RestartStreamCommand.code, new RestartStreamCommand());
+    }
+    console.log(`${role} connected: ${socket.conn.remoteAddress}`);
+    socket.on("disconnect", () => {
+        watchersConnected--;
+        console.log(`${role} left: ${socket.conn.remoteAddress}`);
+        if (watchersConnected < 1) {
+            piws.emit(StopStreamCommand.code, new StopStreamCommand());
+        }
+    });
+};
 
-streemanWs.on('connection', (socket: io.Socket) => {
+const onSteermanConnection = (socket: io.Socket) => {
     socket.on(BamboozleCommand.code, (cmd: BamboozleCommand) => {
         piws.emit(BamboozleCommand.code, cmd);
     });
     socket.on(MoveCommand.code, (cmd: MoveCommand) => {
         piws.emit(MoveCommand.code, cmd);
     });
-    console.log(`Steerman connected: ${socket.conn.remoteAddress}`);
+};
+
+ws.on('connection', (socket: io.Socket) => {
+    onClientConnection(socket, "Watcher");
+});
+
+streemanWs.on('connection', (socket: io.Socket) => {
+    onClientConnection(socket, "Steerman");
+    onSteermanConnection(socket);
 });
 
 piws.on("connection", (socket: io.Socket) => {
@@ -49,9 +74,10 @@ piws.on("connection", (socket: io.Socket) => {
     }
     piConnected++;
     console.log(`Robot connected: ${socket.conn.remoteAddress}`);
-    socket.on("tmp", (data: any) => {
-        ws.emit("tmp", data);
-    });
+
+    if (watchersConnected) {
+        piws.emit(StartStreamCommand.code, new StartStreamCommand());
+    }
 
     socket.on("disconnect", () => {
         console.log(`Robot disconnected: ${socket.conn.remoteAddress}`);
@@ -60,11 +86,11 @@ piws.on("connection", (socket: io.Socket) => {
 });
 
 const streamServer = createTcpServer((socket: Socket) => {
-    socket.on("connect", () => {
-        console.log("camera connected");
-    });
+    console.log("Camera connected: " + socket.remoteAddress);
     socket.pipe(splitter).on("data", (data: any) => {
         const packet = Buffer.concat([NALSeparator, data]);
+        console.log("got packet");
+        ws.emit("nalucast", packet);
         streemanWs.emit("nalucast", packet);
     });
 });

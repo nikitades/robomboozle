@@ -38,7 +38,7 @@ class ModeSelector extends React.Component {
                                         <p className="title is-4">Dear guest</p>
                                     </div>
                                 </div>
-                                <ModeSelectorLoginForm mode={"watcher"} title={"Watch & control the robot."} />
+                                <ModeSelectorLoginForm mode={"watcher"} title={"Just watch the robot."} />
                             </div>
                         </div>
                     </div>

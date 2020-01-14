@@ -46,3 +46,18 @@ export class BamboozleCommand extends RoboCommand {
     public static readonly code: string = MoveCommand.prefix + "_bamboozle";
     public code: string = BamboozleCommand.code;
 }
+
+export class StartStreamCommand extends RoboCommand {
+    public static readonly code: string = StartStreamCommand.prefix + "_start_stream";
+    public code: string = StartStreamCommand.code;
+}
+
+export class StopStreamCommand extends RoboCommand {
+    public static readonly code: string = StopStreamCommand.prefix + "_stop_stream";
+    public code: string = StopStreamCommand.code;
+}
+
+export class RestartStreamCommand extends RoboCommand {
+    public static readonly code: string = RestartStreamCommand.prefix + "_restart_stream";
+    public code: string = RestartStreamCommand.code;
+}

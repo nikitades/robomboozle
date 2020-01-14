@@ -4,13 +4,13 @@ import { createReadStream } from "fs";
 import { Readable } from "stream";
 import * as SocketIOClient from "socket.io-client";
 import { Socket as TcpSocket } from "net";
-import { MoveCommand, BamboozleCommand } from "../../common/commands";
+import { MoveCommand, BamboozleCommand, StartStreamCommand, StopStreamCommand, RestartStreamCommand } from "../../server/webclient/src/common/commands";
 import { PwmController } from "./PwmController";
 
 /**
- * It's a class for the two-side network interaction.
+ * It's a class for two-way network interaction.
  * This app sends the video stream to some server.
- * And then listens for the websocket commands from this (or another) server.
+ * And then listens for websocket commands from this (or another) server.
  * 
  * In the real world it is the robot with video camera.
  * It streams what it sees, and it does what it receives from the websockets.
@@ -23,6 +23,7 @@ import { PwmController } from "./PwmController";
  */
 export class RaspividTransmitter {
     constructor(transmitterParams: TransmitterParams, raspividParams: RaspividParams) {
+        this.startPreparation();
         this.raspividParams = raspividParams;
         this.transmitterParams = transmitterParams;
 
@@ -30,15 +31,20 @@ export class RaspividTransmitter {
             console.log("WARNING! Non-zero timeout has been set. This may cause a severe lagging.");
         }
 
-        this.wsClient = SocketIOClient(`http://${this.transmitterParams.wsHost}:${this.transmitterParams.wsPort}`, {
-            path: "/robot/" + this.transmitterParams.secret
-        });
-        this.tcpClient = new TcpSocket().connect({
-            port: Number(this.transmitterParams.tcpPort),
-            host: this.transmitterParams.tcpHost
-        });
+        this.connectTcpClient();
+        this.connectWsClient();
         this.listenForWsCommands();
+        this.setDefaultSplitter(); //Could be reassigned at the runtime
+        this.prepared("general");
     }
+
+    private readiness: { [key: string]: boolean } = {};
+    public ready: Promise<void> = new Promise(res => {
+        this.getReady = res;
+    });
+    private getReady: Function;
+
+    private reconnectTcpInterval: NodeJS.Timeout;
 
     private wsClient: SocketIOClient.Socket;
     private tcpClient: TcpSocket;
@@ -48,6 +54,80 @@ export class RaspividTransmitter {
     private process: ChildProcess;
     private splitter: any; //TODO: create types for the Splitter
     private NALSeparator: Buffer = Buffer.from([0, 0, 0, 1]);
+
+    /** BELOW PREPARATION METHODS ARE COMING */
+
+    /**
+     * Prepares the system parts for the work.
+     * All the items are to be consequently initialized.
+     */
+    private startPreparation() {
+        this.readiness = {
+            "ws_connection": false,
+            "tcp_connection": false,
+            "general": false
+        };
+    }
+
+    /**
+     * Marks the system part as ready.
+     * If all the parts are ready, resolves the readiness promise.
+     * 
+     * @param key 
+     */
+    private prepared(key: string) {
+        this.readiness[key] = true;
+        if (Object.values(this.readiness).every(item => !!item)) {
+            console.log("system is up");
+            this.getReady();
+        }
+    }
+
+    /**
+     * Creates the TCP connection. In case of disconnect is called by interval.
+     */
+    private connectTcpClient() {
+        console.log("trying to establish the tcp connection");
+        try {
+            if (!this.tcpClient) {
+                console.log('creating new tcp client');
+                this.tcpClient = new TcpSocket();
+                this.tcpClient.on("connect", () => {
+                    console.log("tcp connection established");
+                    clearInterval(this.reconnectTcpInterval);
+                    this.prepared("tcp_connection");
+                });
+                this.tcpClient.on("error", (err: Error) => {
+                    console.log("Failed: " + err.message);
+                    clearInterval(this.reconnectTcpInterval);
+                    this.reconnectTcpInterval = setInterval(this.connectTcpClient.bind(this), 5000);
+                });
+            }
+            this.tcpClient.connect({
+                port: Number(this.transmitterParams.tcpPort),
+                host: this.transmitterParams.tcpHost
+            });
+        } catch (e) {
+            console.log("oh: " + e.message);
+        }
+    }
+
+    /**
+     * Creates the WS connection.
+     */
+    private connectWsClient() {
+        if (!this.wsClient) {
+            this.wsClient = SocketIOClient(`http://${this.transmitterParams.wsHost}:${this.transmitterParams.wsPort}`, {
+                path: "/robot/" + this.transmitterParams.secret
+            });
+        }
+        this.wsClient.on("connect", () => {
+            console.log("ws connection established");
+            this.prepared("ws_connection");
+        });
+    }
+
+    /** BELOW STREAMING METHODS ARE COMING */
 
     /**
      * Sets the default h264 split token
@@ -74,7 +154,9 @@ export class RaspividTransmitter {
      * Pass --splitOnSoc true among the CLI arguments to turn it on, and don't forget to make your backend ready for the stream already split.
      * (Robomboozle Backend is ready btw. It will just reassemble the stream once againg)
      */
-    public startCameraPipe(): this {
+    public async startCameraPipe(): Promise<this> {
+
+        await this.ready;
 
         if (!this.checkIfRaspividExists()) {
             throw new Error("No raspivid seems to be installed!");
@@ -102,13 +184,20 @@ export class RaspividTransmitter {
         } else {
             this.source.on("data", this.stream.bind(this));
         }
+        console.log("started camera pipe");
         return this;
     }
 
     public stopCameraPipe(): this {
-        this.source.unpipe(this.splitter);
-        delete this.source;
-        delete this.process;
+        if (this.source) {
+            this.source.unpipe(this.splitter);
+            delete this.source;
+        }
+        if (this.process) {
+            this.process.kill();
+            delete this.process;
+        }
+        console.log("stopped camera pipe");
         return this;
     }
 
@@ -152,7 +241,7 @@ export class RaspividTransmitter {
 
     /**
      * Here we don't transform the stream to re-split it again via the NAL-splitter.
-     * We provide the server with the plain chunks instead. The server pipes the stream to the NAL-splitter itself.
+     * We provide the server with the plain chunks instead. The server pipes the stream to the NAL-splitter itself. (see server.ts in the server folder, "NALSeparator")
      * 
      * @param chunk 
      */
@@ -165,8 +254,17 @@ export class RaspividTransmitter {
      * Here the server tells the robot what it has to do.
      */
     private listenForWsCommands(): void {
-        this.wsClient.on(MoveCommand.code, PwmController.push.bind(PwmController));
+        let prevDir = null;
+        this.wsClient.on(MoveCommand.code, (cmd: MoveCommand) => {
+            if (prevDir === null) prevDir = cmd.direction;
+            //We should not switch the motor direction immediately. 1 empty command pause
+            else if (prevDir !== cmd.direction) PwmController.push(new MoveCommand(cmd.angle, 0, !cmd.direction));
+            PwmController.push(cmd);
+        });
         this.wsClient.on(BamboozleCommand.code, PwmController.push.bind(PwmController));
+        this.wsClient.on(StartStreamCommand.code, () => this.startCameraPipe());
+        this.wsClient.on(StopStreamCommand.code, () => this.stopCameraPipe());
+        this.wsClient.on(RestartStreamCommand.code, () => this.stopCameraPipe() && this.startCameraPipe());
     }
 
     /**

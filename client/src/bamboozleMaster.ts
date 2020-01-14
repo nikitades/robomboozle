@@ -1,4 +1,4 @@
-import { BamboozleCommand, PwmValue, ServoValue } from "../../common/commands";
+import { BamboozleCommand } from "../../server/webclient/src/common/commands";
 
 enum BamboozleDirection {
     down,
@@ -18,7 +18,7 @@ export class BamboozleMaster {
      * 
      * @returns number
      */
-    public getNewDutyValue(): ServoValue {
+    public getNewDutyValue(): number {
         if (this.prevDutyValue == this.BASE) {
             this.direction = BamboozleDirection.up - this.direction;
             return this.prevDutyValue = this.BASE + this.STEP;

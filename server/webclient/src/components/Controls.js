@@ -6,8 +6,6 @@ import Params from "../common/params";
 import { MoveCommand, BamboozleCommand } from "../common/commands";
 import "../styles/Controls.css";
 
-const WEBCLIENT_TICK_RATE = 50;
-
 class Controls extends React.Component {
     nippleManager = null;
     cmdBus = {

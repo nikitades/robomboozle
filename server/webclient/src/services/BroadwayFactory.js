@@ -7,13 +7,12 @@ export default class BroadwayFactory {
         return new Player({
             useWorker: false,
             workerFile: "/js/libs/Decoder.js",
-            webgl: true,
+            webgl: false,
             size: { width: w, height: h }
         });
     }
 
     static getPlayer(w = 640, h = 480) {
-        console.log({ w, h })
         if (JSON.stringify(params) === JSON.stringify([w, h])) {
             return player;
         }

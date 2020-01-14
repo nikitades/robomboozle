@@ -20,10 +20,7 @@ const wrapper = new RaspividTransmitter(
     )
 );
 
-PwmController.run();
-
-wrapper
-    .setDefaultSplitter()
-    // .startFilePipe("/Users/ars/Downloads/15732390143540.mp4");
-    // .startConsolePipe();
-    .startCameraPipe();
+(async () => {
+    await wrapper.ready;
+    PwmController.run();
+})()

@@ -1,4 +1,4 @@
-import { IRoboCommand } from "../../common/commands";
+import { IRoboCommand } from "../../server/webclient/src/common/commands";
 
 export interface ICommandsRegistry {
     getActive(code: string): IRoboCommand;
