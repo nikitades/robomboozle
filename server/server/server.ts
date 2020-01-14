@@ -1,4 +1,4 @@
-import { createServer as createTcpServer, Socket, ListenOptions } from "net";
+import { createServer as createTcpServer, Socket, ListenOptions, Server } from "net";
 import { createServer as createHttpServer } from "http";
 import * as express from "express";
 import * as Split from "stream-split";
@@ -44,6 +44,7 @@ const onClientConnection = (socket: io.Socket, role: string) => {
         watchersConnected--;
         console.log(`${role} left: ${socket.conn.remoteAddress}`);
         if (watchersConnected < 1) {
+            console.log("no one left - stopping stream...");
             piws.emit(StopStreamCommand.code, new StopStreamCommand());
         }
     });

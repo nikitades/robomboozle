@@ -3,6 +3,7 @@ import Params from "../../server/webclient/src/common/params";
 import { ICommandsRegistry, CommandsRegistry } from "./commandsRegistry";
 import { BamboozleMaster } from "./bamboozleMaster";
 import { Gpio } from "pigpio";
+import SpeedWizard from "./SpeedWizard";
 const L298N = require("pigpio-l298n");
 
 export class PwmController {
@@ -36,14 +37,7 @@ export class PwmController {
         this.registry.setActive(cmd);
         console.log('started move'); 
 
-        const clearAngle = cmd.angle < 180 ? cmd.angle : (cmd.angle - (cmd.angle - 180) * 2);
-        const leftSpeed = clearAngle <= 90 ? cmd.speed : ((180 - cmd.angle) / 90) * cmd.speed;
-        const rightSpeed = clearAngle >= 90 ? cmd.speed : (cmd.angle / 90) * cmd.speed;
-
-        console.log({
-            leftSpeed,
-            rightSpeed
-        });
+        const [leftSpeed, rightSpeed] = SpeedWizard.getSpeed(cmd);
 
         cmd.direction === MoveCommand.DIR_F
             ? this.motors.forward(this.motors.NO1) || this.motors.forward(this.motors.NO2)

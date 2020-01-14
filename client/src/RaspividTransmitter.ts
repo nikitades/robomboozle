@@ -55,6 +55,8 @@ export class RaspividTransmitter {
     private splitter: any; //TODO: create types for the Splitter
     private NALSeparator: Buffer = Buffer.from([0, 0, 0, 1]);
 
+    private isCameraPipeRunning: boolean = false;
+
     /** BELOW PREPARATION METHODS ARE COMING */
 
     /**
@@ -95,11 +97,15 @@ export class RaspividTransmitter {
                 this.tcpClient.on("connect", () => {
                     console.log("tcp connection established");
                     clearInterval(this.reconnectTcpInterval);
+                    if (this.tcpClient.isPaused()) this.tcpClient.resume();
                     this.prepared("tcp_connection");
                 });
                 this.tcpClient.on("error", (err: Error) => {
                     console.log("Failed: " + err.message);
                     clearInterval(this.reconnectTcpInterval);
+                    this.stopCameraPipe();
+                    this.tcpClient.pause();
+                    this.tcpClient.destroy();
                     this.reconnectTcpInterval = setInterval(this.connectTcpClient.bind(this), 5000);
                 });
             }
@@ -155,7 +161,7 @@ export class RaspividTransmitter {
      * (Robomboozle Backend is ready btw. It will just reassemble the stream once againg)
      */
     public async startCameraPipe(): Promise<this> {
-
+        if (this.isCameraPipeRunning) return;
         await this.ready;
 
         if (!this.checkIfRaspividExists()) {
@@ -184,11 +190,13 @@ export class RaspividTransmitter {
         } else {
             this.source.on("data", this.stream.bind(this));
         }
+        this.isCameraPipeRunning = true;
         console.log("started camera pipe");
         return this;
     }
 
     public stopCameraPipe(): this {
+        if (!this.isCameraPipeRunning) return;
         if (this.source) {
             this.source.unpipe(this.splitter);
             delete this.source;
@@ -197,6 +205,7 @@ export class RaspividTransmitter {
             this.process.kill();
             delete this.process;
         }
+        this.isCameraPipeRunning = false;
         console.log("stopped camera pipe");
         return this;
     }
@@ -245,7 +254,7 @@ export class RaspividTransmitter {
      * 
      * @param chunk 
      */
-    private stream(chunk: any): void {
+    private stream(chunk: Buffer): void {
         this.tcpClient.write(chunk);
     }
 
