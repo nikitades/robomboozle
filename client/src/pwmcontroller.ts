@@ -34,17 +34,26 @@ export class PwmController {
     }
 
     private static move(cmd: MoveCommand): void {
+        const nav = SpeedWizard.getSpeedAndDirection(cmd);
+        if (nav.direction !== this.prevDir) {
+            for (let i = 0; i < (250 / Params.tickRate); i++) {
+                this.registry.purge(MoveCommand.code);
+                this.registry.push(new StopCommand());
+            }
+            this.prevDir = nav.direction;
+            return;
+        }
+
+        this.prevDir = nav.direction;
+
         this.registry.setActive(cmd);
-        console.log('started move'); 
 
-        const [leftSpeed, rightSpeed] = SpeedWizard.getSpeed(cmd);
-
-        cmd.direction === MoveCommand.DIR_F
+        nav.direction === MoveCommand.DIR_F
             ? this.motors.forward(this.motors.NO1) || this.motors.forward(this.motors.NO2)
             : this.motors.backward(this.motors.NO1) || this.motors.backward(this.motors.NO2);
 
-        this.motors.setSpeed(this.motors.NO1, leftSpeed);
-        this.motors.setSpeed(this.motors.NO2, rightSpeed);
+        this.motors.setSpeed(this.motors.NO1, nav.left);
+        this.motors.setSpeed(this.motors.NO2, nav.right);
 
         setTimeout(this.registry.clear.bind(this.registry, cmd.code), this.tick);
     }

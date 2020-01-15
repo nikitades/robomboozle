@@ -8,7 +8,9 @@ export interface ICommandsRegistry {
     getDelay(code: string): number;
     clear(code: string): void;
     push<TRoboCommand extends IRoboCommand>(cmd: TRoboCommand): void;
+    unshift<TRoboCommand extends IRoboCommand>(cmd: TRoboCommand): void;
     pop<TRoboCommand extends IRoboCommand>(code: string): TRoboCommand;
+    purge(code: string): void;
 }
 
 export class CommandsRegistry implements ICommandsRegistry {
@@ -38,8 +40,16 @@ export class CommandsRegistry implements ICommandsRegistry {
         this.queue[cmd.code] = this.queue[cmd.code] || [];
         this.queue[cmd.code].push(cmd);
     }
+    unshift<TRoboCommand extends IRoboCommand>(cmd: TRoboCommand): void {
+        this.queue[cmd.code] = this.queue[cmd.code] || [];
+        this.queue[cmd.code].unshift(cmd);
+    }
     pop<TRoboCommand extends IRoboCommand>(code: string): TRoboCommand {
         return this.queue[code]?.pop() as TRoboCommand;
+    }
+    purge(code: string): void {
+        this.queue[code] = this.queue[code] || [];
+        this.queue[code] = [];
     }
     private setCurTime(code: string): void {
         this.chronometer[code] = Date.now();

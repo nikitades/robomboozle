@@ -264,22 +264,8 @@ export class RaspividTransmitter {
      * Here the server tells the robot what it has to do.
      */
     private listenForWsCommands(): void {
-        let prevDir = null;
-        this.wsClient.on(MoveCommand.code, (cmd: MoveCommand) => {
-            if (prevDir === null) prevDir = cmd.direction;
-            //We should not switch the motor direction immediately. 250 ms pause
-            else if (prevDir !== cmd.direction) {
-                for (let i = 0; i < (250 / Params.tickRate); i++) {
-                    PwmController.push(new StopCommand());
-                }
-                prevDir = cmd.direction;
-            }
-            PwmController.push(cmd);
-        });
-        // this.wsClient.on(BamboozleCommand.code, PwmController.push.bind(PwmController));
-        this.wsClient.on(BamboozleCommand.code, () => {
-            PwmController.push(new MoveCommand(90, 0, true));
-        });
+        this.wsClient.on(MoveCommand.code, PwmController.push.bind(PwmController));
+        this.wsClient.on(BamboozleCommand.code, PwmController.push.bind(PwmController));
         this.wsClient.on(StartStreamCommand.code, () => this.startCameraPipe());
         this.wsClient.on(StopStreamCommand.code, () => this.stopCameraPipe());
         this.wsClient.on(RestartStreamCommand.code, () => this.stopCameraPipe() && this.startCameraPipe());
