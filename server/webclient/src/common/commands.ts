@@ -41,8 +41,12 @@ export class MoveCommand extends RoboCommand {
     public direction: boolean = MoveCommand.DIR_F;
 }
 
-export class BamboozleCommand extends RoboCommand {
+export class StopCommand extends RoboCommand {
+    public static readonly code: string = StopCommand.prefix + "_stop";
+    public code: string = StopCommand.code;
+}
 
+export class BamboozleCommand extends RoboCommand {
     public static readonly code: string = MoveCommand.prefix + "_bamboozle";
     public code: string = BamboozleCommand.code;
 }

@@ -4,8 +4,9 @@ import { createReadStream } from "fs";
 import { Readable } from "stream";
 import * as SocketIOClient from "socket.io-client";
 import { Socket as TcpSocket } from "net";
-import { MoveCommand, BamboozleCommand, StartStreamCommand, StopStreamCommand, RestartStreamCommand } from "../../server/webclient/src/common/commands";
+import { MoveCommand, BamboozleCommand, StartStreamCommand, StopStreamCommand, RestartStreamCommand, StopCommand } from "../../server/webclient/src/common/commands";
 import { PwmController } from "./PwmController";
+import Params from "../../server/webclient/src/common/params";
 
 /**
  * It's a class for two-way network interaction.
@@ -266,11 +267,19 @@ export class RaspividTransmitter {
         let prevDir = null;
         this.wsClient.on(MoveCommand.code, (cmd: MoveCommand) => {
             if (prevDir === null) prevDir = cmd.direction;
-            //We should not switch the motor direction immediately. 1 empty command pause
-            else if (prevDir !== cmd.direction) PwmController.push(new MoveCommand(cmd.angle, 0, !cmd.direction));
+            //We should not switch the motor direction immediately. 250 ms pause
+            else if (prevDir !== cmd.direction) {
+                for (let i = 0; i < (250 / Params.tickRate); i++) {
+                    PwmController.push(new StopCommand());
+                }
+                prevDir = cmd.direction;
+            }
             PwmController.push(cmd);
         });
-        this.wsClient.on(BamboozleCommand.code, PwmController.push.bind(PwmController));
+        // this.wsClient.on(BamboozleCommand.code, PwmController.push.bind(PwmController));
+        this.wsClient.on(BamboozleCommand.code, () => {
+            PwmController.push(new MoveCommand(90, 0, true));
+        });
         this.wsClient.on(StartStreamCommand.code, () => this.startCameraPipe());
         this.wsClient.on(StopStreamCommand.code, () => this.stopCameraPipe());
         this.wsClient.on(RestartStreamCommand.code, () => this.stopCameraPipe() && this.startCameraPipe());

@@ -1,4 +1,4 @@
-import { MoveCommand, BamboozleCommand, IRoboCommand } from "../../server/webclient/src/common/commands";
+import { MoveCommand, BamboozleCommand, IRoboCommand, StopCommand } from "../../server/webclient/src/common/commands";
 import Params from "../../server/webclient/src/common/params";
 import { ICommandsRegistry, CommandsRegistry } from "./commandsRegistry";
 import { BamboozleMaster } from "./bamboozleMaster";
@@ -74,6 +74,13 @@ export class PwmController {
             else if (this.registry.getDelay(MoveCommand.code) < this.tick) this.stopMove();
         } else {
             console.log("Move in progress...");
+        }
+
+        if (!this.registry.getActive(StopCommand.code)) {
+            const stopCmd = this.registry.pop<StopCommand>(StopCommand.code);
+            if (stopCmd) this.stopMove();
+        } else {
+            console.log("Relaxing...");
         }
     }
 
