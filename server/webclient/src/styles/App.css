@@ -1,0 +1,9 @@
+body {
+    touch-action: manipulation;
+}
+
+#langSwitcher {
+    position: fixed;
+    bottom  : 0;
+    right   : 0;
+}

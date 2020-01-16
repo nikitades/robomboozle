@@ -5,6 +5,7 @@ import { exit } from "../store/actions";
 import Params from "../common/params";
 import { MoveCommand, BamboozleCommand } from "../common/commands";
 import "../styles/Controls.css";
+import Localize from '../services/Localize';
 
 class Controls extends React.Component {
     nippleManager = null;
@@ -50,6 +51,10 @@ class Controls extends React.Component {
         });
     }
 
+    handleExit(e) {
+        this.props.exit()
+    }
+
     render() {
         return (
             <div id="controls">
@@ -58,7 +63,7 @@ class Controls extends React.Component {
                     onMouseDown={() => { this.cmdBus.bambInterval = setInterval(this.apply.bind(this, new BamboozleCommand()), Params.tickRate) }}
                     onMouseUp={() => { clearInterval(this.cmdBus.bambInterval) }}
                     id="bamboozleButton"></button>
-                <button id="exit"></button>
+                <button onClick={this.handleExit.bind(this)} id="exitButton">{Localize(this.props.language, "EXIT")}</button>
             </div>
         );
     }
@@ -66,6 +71,7 @@ class Controls extends React.Component {
 
 export default connect(
     state => ({
+        language: state.language,
         socket: state.socket
     }),
     dispatch => ({

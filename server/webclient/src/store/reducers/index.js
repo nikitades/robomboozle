@@ -1,5 +1,6 @@
-import { TYPE_PASSWORD, SELECT_MODE, BEGIN_LOGIN, FAILED_LOGIN, CREATE_PLAYER, EXIT } from "../actionTypes";
+import { TYPE_PASSWORD, TYPE_NAME, SELECT_MODE, BEGIN_LOGIN, FAILED_LOGIN, CREATE_PLAYER, EXIT, CREATE_NEW_NOTIFICATION, REMOVE_LAST_NOTIFICATION, SET_LANG } from "../actionTypes";
 import BroadwayFactory from "../../services/BroadwayFactory";
+import nameGen from "../../services/NameGenerator";
 
 function getInitialPassword(mode) {
     try {
@@ -15,17 +16,31 @@ function getInitialPassword(mode) {
     }
 }
 
+function getInitialName(mode) {
+    try {
+        const name = window.localStorage[`${mode}_name`];
+        if (!name) return "";
+        return name;
+    } catch (e) {
+        return "";
+    }
+}
+
 const initialState = {
     mode: null,
     socket: null,
     player: null,
+    notifications: [],
+    language: "ru",
     steerman: {
         password: getInitialPassword("steerman"),
+        name: getInitialName("steerman"),
         isLoggingIn: false,
         error: null
     },
     watcher: {
         password: getInitialPassword("watcher"),
+        name: nameGen(),
         isLoggingIn: false,
         error: null
     }
@@ -39,6 +54,14 @@ function rootReducer(state = initialState, action) {
                 [action.payload.mode]: {
                     ...state[action.payload.mode],
                     password: action.payload.newPwd
+                }
+            };
+        case TYPE_NAME:
+            return {
+                ...state,
+                [action.payload.mode]: {
+                    ...state[action.payload.mode],
+                    name: action.payload.name
                 }
             };
         case SELECT_MODE:
@@ -70,7 +93,44 @@ function rootReducer(state = initialState, action) {
                 player: BroadwayFactory.getPlayer(action.payload.w, action.payload.h)
             }
         case EXIT:
-            return initialState;
+            window.localStorage[`${state.mode}_pwd`] = "";
+            window.localStorage[`${state.mode}_name`] = "";
+            window.localStorage[`${state.mode}_pwd_time`] = "";
+            return {
+                ...initialState,
+                steerman: {
+                    ...initialState.steerman,
+                    name: "",
+                    password: "",
+                },
+                watcher: {
+                    ...initialState.watcher,
+                    name: "",
+                    password: "",
+                },
+            };
+        case CREATE_NEW_NOTIFICATION:
+            return {
+                ...state,
+                notifications: [
+                    ...state.notifications,
+                    {
+                        type: action.payload.type,
+                        id: action.payload.id,
+                        payload: action.payload.payload
+                    }
+                ]
+            };
+        case REMOVE_LAST_NOTIFICATION:
+            return {
+                ...state,
+                notifications: state.notifications.slice(1, state.notifications.length - 1)
+            };
+        case SET_LANG:
+            return {
+                ...state,
+                language: action.payload.lang
+            };
         default:
             return state;
     }

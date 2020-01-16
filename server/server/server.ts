@@ -27,6 +27,11 @@ const piws = io(httpServer, {
 let piConnected = 0;
 let watchersConnected = 0;
 
+const broadcast = (event: string, msg: any) => {
+    ws.emit(event, msg);
+    streemanWs.emit(event, msg); ``
+};
+
 const onClientConnection = (socket: io.Socket, role: string) => {
     watchersConnected++;
     if (watchersConnected === 1) {
@@ -45,6 +50,12 @@ const onClientConnection = (socket: io.Socket, role: string) => {
             piws.emit(StopStreamCommand.code, new StopStreamCommand());
         }
     });
+    socket.on("connected", (name: string) => {
+        broadcast("new_client", {
+            role,
+            name
+        });
+    })
 };
 
 const onSteermanConnection = (socket: io.Socket) => {
@@ -89,8 +100,7 @@ const streamServer = createTcpServer((socket: Socket) => {
     const splitter = new Split(NALSeparator);
     socket.pipe(splitter).on("data", (data: any) => {
         const packet = Buffer.concat([NALSeparator, data]);
-        ws.emit("nalucast", packet);
-        streemanWs.emit("nalucast", packet);
+        broadcast("nalucast", packet);
     });
 });
 const listenOptions: ListenOptions = {
