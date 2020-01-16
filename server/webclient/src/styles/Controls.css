@@ -21,25 +21,6 @@
     cursor       : pointer;
 }
 
-#exitButton {
-    position     : absolute;
-    width        : 15vw;
-    height       : 5vw;
-    max-width    : 185px;
-    max-height   : 125px;
-    min-width    : 75px;
-    min-height   : 75px;
-    right        : 5vw;
-    top          : 5vw;
-    border-radius: 10%;
-    background   : white;
-    font-size    : 3rem;
-    padding      : 10px;
-    box-sizing   : content-box;
-    opacity      : 0.15;
-    cursor       : pointer;
-}
-
 #exitButton:hover {
     opacity: 1;
 }
