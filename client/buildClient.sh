@@ -1,3 +1,3 @@
 #!/bin/bash
-(npm i)
-(npm run compile)
+(export NODE_ENV=production && npm i --production)
+(export NODE_ENV=production && npm run compile:prod)

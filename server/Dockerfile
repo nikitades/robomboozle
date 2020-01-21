@@ -1,13 +1,7 @@
-FROM node:10
+FROM node:10-alpine
 WORKDIR /image
 
-RUN ls -la
-RUN pwd
-
 COPY ./ /image
-
-RUN ls -la
-RUN pwd
 
 EXPOSE 8000
 EXPOSE 9000
