@@ -1,0 +1,82 @@
+version: 2
+jobs:
+  build_server:
+    docker:
+      - image: circleci/node:stretch
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - rbmbzl-server-{{ checksum "server/server/package.json" }}
+            - rbmbzl-server
+      - run: (cd server/server && npm i && npm run build)
+      - save_cache:
+          key: rbmbzl-server-{{ checksum "server/server/package.json" }}
+          key: rbmbzl-server
+          paths:
+            - server/server/dist
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  build_webclient:
+    docker:
+      - image: circleci/node:stretch
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - rbmbzl-webclient-{{ checksum "server/webclient/package.json" }}
+            - rbmbzl-webclient
+      - run: (cd ./server/webclient && npm i && npm run build)
+      - save_cache:
+          key: rbmbzl-webclient-{{ checksum "server/webclient/package.json" }}
+          key: rbmbzl-webclient
+          paths:
+            - server/webclient/dist
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  build_image:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: |
+          docker build \
+              -t $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:latest \
+              -t $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_BRANCH \
+              -t $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_BRANCH-$CIRCLE_SHA1 \
+              server
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker push $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
+  restart_image:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - run: ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "sudo docker service update ${SERVICE_NAME}"
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build_server:
+          filters:
+            branches:
+              only: master
+      - build_webclient:
+          filters:
+            branches:
+              only: master
+      - build_image:
+          requires:
+            - build_server
+            - build_webclient
+      - restart_image:
+          requires:
+            - build_server
+            - build_webclient
