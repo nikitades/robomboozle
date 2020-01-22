@@ -74,5 +74,4 @@ workflows:
             - build_webclient
       - restart_image:
           requires:
-            - build_server
-            - build_webclient
+            - build_image
