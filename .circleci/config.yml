@@ -8,11 +8,9 @@ jobs:
       - restore_cache:
           keys:
             - rbmbzl-server-{{ checksum "server/server/package.json" }}
-            - rbmbzl-server
       - run: (cd server/server && npm i && npm run build)
       - save_cache:
           key: rbmbzl-server-{{ checksum "server/server/package.json" }}
-          key: rbmbzl-server
           paths:
             - server/server/dist
       - persist_to_workspace:
@@ -27,11 +25,9 @@ jobs:
       - restore_cache:
           keys:
             - rbmbzl-webclient-{{ checksum "server/webclient/package.json" }}
-            - rbmbzl-webclient
       - run: (cd ./server/webclient && npm i && npm run build)
       - save_cache:
           key: rbmbzl-webclient-{{ checksum "server/webclient/package.json" }}
-          key: rbmbzl-webclient
           paths:
             - server/webclient/dist
       - persist_to_workspace:
