@@ -68,6 +68,8 @@ workflows:
           filters:
             branches:
               only: master
+          requires:
+            - build_server
       - build_image:
           requires:
             - build_server
