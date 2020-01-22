@@ -41,7 +41,7 @@ jobs:
       - attach_workspace:
           at: .
       - setup_remote_docker:
-          docker_layer_caching: true
+          docker_layer_caching: false
       - run: |
           docker build \
               -t $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:latest \
