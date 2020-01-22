@@ -69,7 +69,7 @@ export const createSocket = (mode, name, pwd) => {
         }
         dispatch(beginLogin(mode));
         try {
-            const socket = SocketFactory.connect(mode, pwd);
+            let socket = SocketFactory.connect(mode, pwd);
             await new Promise(res => setTimeout(res, 150));
             if (!socket.connected) {
                 socket = null;
