@@ -69,10 +69,9 @@ export const createSocket = (mode, name, pwd) => {
         }
         dispatch(beginLogin(mode));
         try {
-            let socket = SocketFactory.connect(mode, pwd);
+            const socket = SocketFactory.connect(mode, pwd);
             await new Promise(res => setTimeout(res, 150));
             if (!socket.connected) {
-                socket = null;
                 throw new Error("Failed to connect!");
             }
             window.localStorage[`${mode}_pwd`] = pwd;
