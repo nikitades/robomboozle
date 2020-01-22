@@ -12,7 +12,7 @@ parser.addArgument(
 
 parser.addArgument(
     ["--httpPort", "-hp"],
-    { help: "An HTTP server port", defaultValue: "8000" }
+    { help: "An HTTP server port", defaultValue: "1234" }
 )
 
 parser.addArgument(
