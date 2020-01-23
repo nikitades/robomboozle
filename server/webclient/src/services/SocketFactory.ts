@@ -7,7 +7,6 @@ export default class SocketFactory {
         const params = {
             path: `/${mode}/` + pwd
         };
-        console.log("sweet test");
         const socket = io("/", params);
         socket.on("new_client", (data: any) => {
             store.dispatch(notifyNewConnection(
