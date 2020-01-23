@@ -4,7 +4,7 @@ import { notifyNewConnection } from "../store/actions";
 
 export default class SocketFactory {
     static connect(mode: string, pwd: string): any {
-        const socket = io("http://" + document.location.hostname + ":" + document.location.port, {
+        const socket = io({
             path: `/${mode}/` + pwd
         });
         socket.on("new_client", (data: any) => {
