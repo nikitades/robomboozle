@@ -8,7 +8,7 @@ export default class SocketFactory {
             path: `/${mode}/` + pwd
         };
         console.log({params});
-        const socket = io("//robomboozle.ru", params);
+        const socket = io("/", params);
         socket.on("new_client", (data: any) => {
             store.dispatch(notifyNewConnection(
                 data.role,
