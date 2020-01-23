@@ -5,7 +5,7 @@ import { notifyNewConnection } from "../store/actions";
 export default class SocketFactory {
     static connect(mode: string, pwd: string): any {
         const params = {
-            path: `/${mode}/` + pwd
+            path: `/ws/${mode}/` + pwd
         };
         const socket = io("/", params);
         socket.on("new_client", (data: any) => {

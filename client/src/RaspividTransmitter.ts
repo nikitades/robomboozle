@@ -125,7 +125,7 @@ export class RaspividTransmitter {
     private connectWsClient() {
         if (!this.wsClient) {
             this.wsClient = SocketIOClient(`http://${this.transmitterParams.wsHost}:${this.transmitterParams.wsPort}`, {
-                path: "/robot/" + this.transmitterParams.secret
+                path: "/ws/robot/" + this.transmitterParams.secret
             });
         }
         this.wsClient.on("connect", () => {

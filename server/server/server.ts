@@ -14,14 +14,14 @@ httpServer.listen(args["httpPort"]);
 console.log("http server listens at " + args["httpPort"]);
 
 const ws = io(httpServer, {
-    path: "/watcher/" + args["watchSecret"]
+    path: "/ws/watcher/" + args["watchSecret"]
 });
 const streemanWs = io(httpServer, {
-    path: "/steerman/" + args["steerSecret"]
+    path: "/ws/steerman/" + args["steerSecret"]
 });
 
 const piws = io(httpServer, {
-    path: "/robot/" + args["piSecret"]
+    path: "/ws/robot/" + args["piSecret"]
 })
 
 let piConnected = 0;
