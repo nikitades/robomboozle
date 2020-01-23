@@ -16,7 +16,8 @@ class ExitButton extends React.Component {
 
 export default connect(
     state => ({
-        mode: state.mode
+        mode: state.mode,
+        language: state.language
     }),
     dispatch => ({
         exit: mode => dispatch(exit(mode))
