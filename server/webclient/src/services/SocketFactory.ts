@@ -4,10 +4,11 @@ import { notifyNewConnection } from "../store/actions";
 
 export default class SocketFactory {
     static connect(mode: string, pwd: string): any {
-        const socket = io({
-            host: "//" + document.location.host,
+        const params = {
             path: `/${mode}/` + pwd
-        });
+        };
+        console.log({params});
+        const socket = io("//robomboozle.ru", params);
         socket.on("new_client", (data: any) => {
             store.dispatch(notifyNewConnection(
                 data.role,
