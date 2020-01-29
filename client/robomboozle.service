@@ -1,0 +1,16 @@
+[Unit]
+Description=Robomboozle Client
+After=network.target
+
+[Service]
+Environment=NODE_ENV=production
+Type=simple
+ExecStart=/home/pi/robomboozle_client/runClient.sh
+WorkingDirectory=/home/pi/robomboozle_client/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

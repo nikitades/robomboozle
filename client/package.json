@@ -8,7 +8,7 @@
     "compile": "tsc src/server.ts --outDir dist",
     "start": "node dist/server.js",
     "debug": "npm run clean && npm run compile && npm run start --",
-    "deploy": "npm run clean && npm run compile && ssh -t pi 'rm -rf /home/pi/jsrelay_client/dist' && scp -r ./dist pi:/home/pi/jsrelay_client && scp -r ./*.json pi:/home/pi/jsrelay_client"
+    "deploy": "ssh -t pi 'rm -rf ~/robomboozle_client && mkdir ~/robomboozle_client' && scp -r ./* pi:~/robomboozle_client/ && scp -r ./*.json pi:~/robomboozle_client && ssh -t pi 'cd ~/robomboozle_client && NODE_ENV=production npm i --production && sudo chmod +x ./*.sh && ./registerClient.sh'"
   },
   "author": "",
   "license": "ISC",

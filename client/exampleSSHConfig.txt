@@ -1,0 +1,8 @@
+=====!!!DO NOT COPY THE TEXT INSIDE THE COMMENTS BLOCK!!!=====
+Copy the text below the comments block to the ~/.ssh/config at the bottom of the file. Make sure you've changed the HostName, User and IdentityFile to the real ones.
+How to create a keyfile and import it to Raspberry: https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md
+=====!!!DO NOT COPY THE TEXT INSIDE THE COMMENTS BLOCK!!!=====
+Host pi
+	HostName 192.168.1.170
+	User pi
+	IdentityFile ~/Some/path/to/keyfile
