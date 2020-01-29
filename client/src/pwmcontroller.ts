@@ -14,7 +14,7 @@ export class PwmController {
     private static registry: ICommandsRegistry = new CommandsRegistry();
     private static bambMaster: BamboozleMaster = new BamboozleMaster();
 
-    private static motors: any = new L298N(17, 27, 22, 16, 20, 21); //Here I choose the GPIO pins
+    private static motors: any = new L298N(16, 20, 21, 17, 27, 22); //Here I choose the GPIO pins
     private static prevDir: boolean;
     private static bamboozler: Gpio = new Gpio(12, { mode: Gpio.OUTPUT });
 

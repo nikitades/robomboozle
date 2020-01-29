@@ -12,9 +12,9 @@ class ModeSelector extends React.Component {
                     <div className="column">
                         <div className="card">
                             <div className="card-image">
-                                <figure className="image is-4by3">
-                                    <img src="https://bulma.io/images/placeholders/1280x960.png" alt={Localize(this.props.language, "THIS_IS_HOW_YOU_CONTROL")} />
-                                </figure>
+                                <video onLoadedMetadata={this.onVideoLoaded} alt={Localize(this.props.language, "THIS_IS_HOW_YOU_CONTROL")} autoPlay muted loop playsInline>
+                                    <source src="/videos/steerman.mp4" type="video/mp4" />
+                                </video>
                             </div>
                             <div className="card-content">
                                 <div className="media">
@@ -29,9 +29,9 @@ class ModeSelector extends React.Component {
                     <div className="column">
                         <div className="card">
                             <div className="card-image">
-                                <figure className="image is-4by3">
-                                    <img src="https://bulma.io/images/placeholders/1280x960.png" alt={Localize(this.props.language, "THIS_IS_HOW_YOU_LOOK")} />
-                                </figure>
+                                <video alt={Localize(this.props.language, "THIS_IS_HOW_YOU_LOOK")} autoPlay muted loop playsInline>
+                                    <source src="/videos/watcher.mp4" type="video/mp4" />
+                                </video>
                             </div>
                             <div className="card-content">
                                 <div className="media">
