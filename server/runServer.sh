@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 [ -z "$piSecret" ] && piSecret="abcdef"
 [ -z "$steerSecret" ] && steerSecret="fedcba"
 [ -z "$watchSecret" ] && watchSecret="aaaaaa"

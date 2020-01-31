@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 [ -z "$tcpHost" ] && tcpHost="192.168.1.111"
 [ -z "$tcpPort" ] && tcpPort="9000"
 [ -z "$wsHost" ] && wsHost="192.168.1.111"
