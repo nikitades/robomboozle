@@ -136,90 +136,89 @@
         [Example >>](https://aliexpress.ru/item/33012058398.html)
 
 
-    10. Универсальное зарядное устройство для ноутбуков
+    10. Universal notebook charger
 
-        Понадобится, чтобы сделать из него зарядник для робота.
-        Единственное требование - чтобы мог выдавать 17-19 вольт. Вам потребуется переделать выходные контакты зарядника, чтобы они подходили к нашим проводочкам.
+        It's needed to make a charger for the robot.
+        The only requirement is the ability to give 17-19 volts output. You have to rebuild the output contacts of the charger to fit to our in-wires (going from the wire terminals).
 
-        [Пример >>](https://aliexpress.ru/item/33002563321.html)
+        [Example >>](https://aliexpress.ru/item/33002563321.html)
 
 
 
-## Сборка
+## Assembly
 
-1. Делаем корпус
+1. Making the case
     
-    Для корпуса хорошо подойдет картон. Я использую икеевский картонный ящик Pappis, вы можете что угодно. Индустриальные надписи на бортах придадут роботу невыразивый DIY-респект.
+    The carton is good for the case. I use the Ikea's carton box Pappis, and you're free to use any carton you'll find. The industrial inscriptions will make the robot look more DIY-ish.
     
-    1. Режем коробку на развертку
+    1. Cutting the carton for the projection
     
         ![case](assets/IMG_2200.jpg)
 
-        Ширина основания - 10,5 см, длина основания - 20,5 см. Высота - 8 см.
-        На вашей развертке должен получиться разложенный на стороны параллелепипед с "ушками" для закрепления. "Ушки" достаточно сделать на боковинах корпуса.
+        The width of the box is 105 millimeters, the length is 205 mm. The height of the box is 80 mm. The result should look like the opened box with "ears" for the fixation. The "ears" should be on the side parts only.
 
-    2. Сгибаем коробку
+    2. Bending the box
 
         ![bend](assets/IMG_5701.jpg)
 
-        Всё просто, кладешь линкейку и сгибаешь. Не помните картон там где он гнуться не должен.
+        It's easy, just put down the ruler and bend along it. Try not to crush the carton where it doesn't have to be bent.
 
-    3. Делаем дырки
+    3. Making holes
 
-        Нужно сделать дырки:
-        - [2 штуки в каждом "ушке"](assets/IMG_3457.jpg) и 2 штуки в том месте, на которое "ушко" накладывается
-        - [под крепление картонного корпуса на шасси (8 дырок) и выключатель](assets/IMG_0997.jpg)
-        - [под камеру спереди](assets/IMG_6941.jpg) - круглая в центре, 4 небольшие по углам под крепление камеры
-        - [под индикатор батареи сзади](assets/IMG_9045.jpg), и 4 дырки под крепление индикатора
-        - в правой части корпуса [сложную дырку под сервопривод руки](assets/IMG_6020.jpg), и 2 дырки по бокам под крепление (лучше рассмотрите, как выглядит привод)
-        - 2 небольшие дырки под зарядные провода
+        We have to make the holes:
+        - [2 holes in each "ear"](assets/IMG_3457.jpg) and 2 holes in the place where the "ear" is attached to
+        - [8 holes to attach the carton case to the chassis, and for the switch](assets/IMG_0997.jpg)
+        - [for the camera in the front side](assets/IMG_6941.jpg) - round in the center, and 4 small holes in the corners for the camera mounts
+        - [for the battery indicator in the tail](assets/IMG_9045.jpg), and also 4 holes for the indicator mounts
+        - in the right part of the case [a complicated hole for the servo drive](assets/IMG_6020.jpg), and two holes by the sides of it for the mounts (you should better take a look at how it's done on the image)
+        - two small holes in the tail for the charging wires
 
-        В будущем как крепление я использую проволочки, которыми проводочки сматывают в электронике. Божественно удобно и ублюдочно-некрасиво. То что надо.
+        I'll use black mounting wires usually used to bind cables in the newly shipped devices to attach the peripherials to the case. It's simple and ugly enough.
 
-    4. Скрепляем корпус
+    4. Fixing the case
 
         ![bound](assets/IMG_0938.jpg)
 
-        Должно получиться примерно вот так. Для соединения частей корпуса я использовал черные хомуты. Усики отрезаем.
+        It should look like this in the end. I used small black clamps to attach the case parts. And then I cut off the rest of the clamps.
 
-    5. Закрепляем корпус на шасси
+    5. Attaching the case to the chassis
 
         ![bound_to_chassis](assets/IMG_1531.jpg)
 
-        (Не обращайте внимания что на фото немного больше периферии вставлено, мы к этому еще придем)
+        (Never mind the amount of peripherials is more than it's supposed to be according to this guide; we'll get there later)
 
-        1. Поставьте коробку на шасси
-        2. Просуньте проводочки от контактов моторов в подходящие дырки
-        3. Просуньте проводочки от выключателя в центральную дырку
+        1. Put the case on the chassis
+        2. Push the wires from the motors to the relevant holes
+        3. Push the wires from the switch to the biggest hole
+        
+        Keep in mind that the camera has to be faced to the same as as the third (small) wheel. Otherwise the robot is not going to be controlled well.
 
-        Держите в уме, что камера должна смотреть в ту же сторону, куда и третье колесо (иначе робот будет кошмарно плохо рулиться).
-
-    6. Вставляем сервопривод и индикатор
+    6. Connecting the servo and the battery indicator
 
         ![indicator](assets/IMG_5230.jpg)
         ![indicator2](assets/IMG_0383.jpg)
 
-        Индикатор приматываем проволокой. Завязываем снаружи корпуса. Аналогично с сервоприводом. Привод должен прилегать сильно, иначе отпадет во время колебаний.
+        Now let's attach the indicator with the black mounting wire. Tie the wires outside the box. The same with the servo. The servo drive should be really tightened because it will fall of during the wild ride.
 
-    7. Устанавливаем Raspberry и камеру
+    7. Installing the Raspberry Pi and the camera
 
         ![rpi](assets/IMG_1244.jpg)
 
-        Вкладываем RPI в корпус как показано. Если болтается, можно уплотнить кусочками сургуча (или обрезков картона, которые точно остались). Лучше уплотнить, потому что люфт это от лукавого.
+        Put the RPI to the case as shown. If it's too loose, then put some carton pieces at between it and the case wall. It's really better to fix the Pi board.
 
-        Камеру нужно просунуть в дырку, и 4 крепежных отверстия попарно соединить волшебными проволочками. Следите за тем, чтобы давление на сам видеочип было несильным, а то он очень легко отваливается. Потом можно обратно поставить, но нужно отсоединять камеру, а это морока.
+        Then you should push the camera through the camera hole, and fix it with black mounting wires. Be sure not to put too much pressure to the small video chip on the camera board, since it is really easy do detach. You can put it back, but you'll have to disassemble the part of the robot.
 
         ![camera](assets/IMG_8361.jpg)
 
-    8. Устанавливаем батарейный блок
+    8. Installing the battery block
 
         ![ab](assets/IMG_5852.jpg)
 
-        Для удобства я сделал перегородку из картона. Советую (должна быть слегка скошенная трапеция).
+        I made a separator from the piece of carton to make it more comfortable to keep all the parts inside. It should look like a slightly beveled trapeze.
 
-        Сначала батареи, потом BMS-плата, потом проводочки, ведущие в индикатор либо P+ и P-, ведущие к распределительным клеммникам (возможно, индикатор придется снять - места маловато).
-
-        P- втыкайте сначала в выключатель, а свободный второй конец в будущем воткнем в распределительные клеммники.
+        First come the batteries, then the BMS board, then all the wires leading to the indicator (probably you'll have to take it off to put on all the battery wires) and the power contacts (P+ and P-). The power contacts should be put inside the wire terminals (according to the polarity).
+        
+        P- contact should go to the switch, and the free end in the future would be put inside the wire terminal. P+ contact goes straight to the terminal.
 
     9. Устанавливаем клеммники и преобразователи
 
