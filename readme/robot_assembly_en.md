@@ -220,99 +220,99 @@
         
         P- contact should go to the switch, and the free end in the future would be put inside the wire terminal. P+ contact goes straight to the terminal.
 
-    9. Устанавливаем клеммники и преобразователи
+    9. Installing the wire terminals and converters
 
         ![stepdowns](assets/IMG_2632.jpg)
 
-        Стоит закрыть батарейный отсек крышечкой, станет попросторнее.
-        В пространство перед отсеком кладем два клеммника. Плюсовой провод от батарейного отсека втыкаем в зажим положительного клеммника. Минусовой провод (который у нас уже пропущен через выключатель, а выключатель в положении ВЫКЛ) втыкаем в минусовой разъем клеммника. Укладываем всё аккуратненько. Пока что не втыкаем контакты кажого преобразователя в соответствующие устройства.
+        It's a good idea to cover the battery block with a carton lid.
+        Put two wire terminals in the space between the battery block and RPI. The positive contact from the battery block should be put to the clamp of the positive wire terminal. The negative contact (which should be by now joined wit the swith, and switch is OFF) should be put to the negative wire terminal. Lay everything carefully. Do not connect the converters' contacts to any of the devices right now.
 
-        На картинке драйвер моторов просто лежит, еще не подключен.
+    10. Connecting the motor driver
 
-    10. Подключаем драйвер моторов
-
-        1. Подключаем драйвер моторов к контактам 10-вольтового клеммника
+        1. Connect the motor driver to the 10 volts converter contacts
             
-            Что важно: должна быть УСТАНОВЛЕНА перемычка (рассмотрите фото на алиэкспрессе, чтобы увидеть перемычку). Перемычка сигнализирует драйверу моторов, что нужно брать питание с внешнего, более высоковольтного контура, а не от 5-вольтового с повышением. Если перемычку снять, драйвер моторов сломается.
+            That's important: the jumper has to be INSTALLED (look at the aliexpress photos to see the jumber). The jumper means to the driver board that it has to consume the power from a high-voltage source (not from a 5V source like Raspberry Pi). If you take off the jumper, the motor driver board is going to be broken.
 
-            Три синие контакта: внешнее питание | земля | 5-вольтовый контакт
-            Мы подключаем + от 10-вольтового клеммника к левому контакту внешнего питания, - от 10-вольтового клеммника к контакту земля.
-
-        2. Подключаем контакты моторов к драйверу моторов
+            Thee blue contacts: external power | ground | 5-volts contact
             
-            Подключайте вот так:
-            ```
-            белый       оранжевый
-            оранжевый   белый
-            ```
-            Это если ориентация платы "контактами питания вниз".
+            We connect + from the 10-volts converter to the left blue contact, and - from 10-volts converter to the middle blue contact (ground).
 
-            (На фото неправильно подключено, я тогда еще не знал что нумерация идет 1-4-3-2, а не 1-3-2-4)
+        2. Connect the motors to the motor driver board
+            
+            Connect like this:
+            ```
+            white       orange
+            orange      white
+            ```
+
+            (If the board is turned the blue contacts to the bottom)
+
+            (The way shown in the photo is partially wrong: at that moment I didn't know that the correct order is 1-4-3-2, but not 1-3-2-4. So I connected like orange-white-orange-white)
 
             ![motor_driver](assets/IMG_7303.jpg)
 
-    11. Подключаем GPIO-контакты на Raspberry Pi
+    11. Connect the GPIO contacts of RPI
 
-        Будет три шага: контакты питания самой Raspberry Pi, контакты драйвера моторов и контакты сервопривода.
-
-        Но сначала взгляните на схему GPIO-контактов Raspberry Pi:
+        There is going to be three steps: the contacts of RPI itself, the driver board contacts and the servo contacts.
+        
+        But first take a look at the GPIO contacts scheme of Raspberry Pi:
 
         ![rpi_gpio](assets/Raspberry-Pi-GPIO-Header-with-Photo.png)
 
-        Существует два способа именовать контакты RPI: по их порядковому номеру и по их номерам, выданным безупречно логичными разработчиками Raspberry. Мы будем использовать второй, потому что он более распространен в ПО.
+        There are two ways to name the GPIO contacts: by its sequence number and by the mysterious numbers that RPI engineers gave. We will be using the second way because it's more popular in software.
 
-        То есть, например, ШИМ-модуляцию для сервопривода будет создавать для нас GPIO12, он же пин номер 32.
+        So, for example, we have a PWM contact for the servo. It's going to be GPIO12, aka pin number 32.
 
-        1. Контакты питания Raspberry Pi
+        1. Raspberry Pi power contacts
 
-            Нужно от пятивольтового клеммника положительный контакт воткнуть в любой пятивольтовый пин. Подойдет номер 4.
-            Отрицательный контакт нужно воткнуть в Ground-пин, подойдет номер 6.
+            You should put the positive contact from the 5-volts converter to any of 5-volts pins of RPI. I will use the pin number 4.
+            The negative contact should be put to any of the Ground pins, so I'll use the pin number 6.
 
             ![rpi_power](assets/IMG_1913.jpg)
 
-        2. Контакты драйвера моторов
+        2. The motor driver contacts
 
-            У драйвера 6 контактов. Первые 3 отвечают за левое колесо, вторые 3 за правое.
+            The driver has 6 contacts. The first three are for the left wheel, the last three are for the right one.
 
-            Первые три контакта последовательно втыкаем в пины: GPIO17, GPIO27, GPIO22.
+            Put first three contacts consequently to the pins: GPIO17, GPIO27, GPIO22.
 
-            Вторые три втыкаем в GPIO16, GPIO20, GPIO21.
+            Put the last three to: GPIO16, GPIO20, GPIO21.
 
-            Должно быть как тут:
+            It should be like this:
 
             ![motor_driver_gpio](assets/IMG_7470.jpg)
 
-        3. Контакты сервопривода
+        3. Servo contacts
 
-            У привода 3 контакта: +, - и ШИМ (широтно-импульсная модуляция).
+            It has three contacts: +, - and PWM.
 
-            Положительный втыкаем в пин номер 2 (5-вольтовый), отрицальный втыкаем в номер 9 (Groud), а ШИМ-пин втыкаем в GPIO12.
+            Put the positive contact to the pin number 2 (5-volts), the negative one to the pin number 9 (Ground), and the PWM pin to GPIO12.
 
             ![servo_pins](assets/IMG_5007.jpg)
 
-    12. Пробный запуск
+    12. The test launch
 
-        Молимся, крестимся, щуримся, нажимаем на кнопку включения. Должны аккуратно загореться лампочки, и, самое главное, должен заморгать красным и зеленым диод на RPI.
+        Pray and press the switch button. All the small LEDs should go on. And the main thing is two LEDs (red and green) on RPI, which also should go on.
 
-    13. Делаем зарядное устройство
+    13. Making the charger
 
-        1. Возьмите самый широкий сменный наконечник зарядного устройства, разломайте его, чтобы добраться до контактов, и припаяйте к ним наши проводочки. Чтобы правильно выбрать цвет проводов - красный или черный, воспользуйтесь вольтметром. Чаще положительный контакт в центре, а отрицательный снаружи. Когда припаяете, смотайте все изолетной, чтобы исключить болтание в точке припоя.
+        1. Take the most wide changeable tip, break it to get to the power contacts and solder our wires (with out-ends). To choose the correct wire colors test the polarity with the voltmeter. The positive contact is usually in the center of a round cable, and the negative is outside. When soldered, cover all the connections with the tape to make it more resistent to shaking.
 
             ![charger](assets/IMG_6097.jpg)
             ![charger2](assets/IMG_9410.jpg)
 
-        2. Возьмите 3-й (из 3-х) понижающий преобразователь постоянного тока, припаяйте ко входам 2 in-проводочка, а к выходам 2 out-проводочка. Во входы вставляйте 2 контакта с зарядного устройства (проверьте полярность!!!), а потом включайте в сеть. На выходных контактах померяйте напряжение и крутите ручку, пока не станет 16,8. Выставьте 16,8, таким напряжением будем заряжать наш батарейный блок.
+        2. Take the third (of 3) step-down converter of DC and solder two in-wires to the input contacts of the converter and two out-wires to the output contacts. Connect the charger out wires with the converter in wires (**double check the polarity**). And then plug it into the  socket. The converter's output contacts now should have something like 20 volts. Turn the small screw counter-clockwise until the voltage becomes 16,8 volts.
 
-    14. Кто-нибудь, дайте этому роботу руку
+    14. Somebody please get this robot an arm
 
-        Хорошо подойдет деревянная палочка и изолента.
+        The best choice is the wooden stich and the tape.
 
         ![robot_arms_apts](assets/IMG_0210.jpg)
 
-    15. Фиксатор крышки
+    15. The lid clamp
 
-        Короче две дырочки и палочка, с одной стороны палочки проволочка-фиксатор.
+        It's two holes and the stick. One side of the stick has the stop (from the black mounting wire).
 
         ![lid_fixator](assets/IMG_1284.jpg)
 
-**Готово.**
+**Done.**
