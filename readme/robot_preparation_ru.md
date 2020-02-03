@@ -17,19 +17,13 @@
 
     Хорошая идея сделать также статичным IP Raspberry Pi (на уровне роутера либо настроек аренды linux). Можно также сделать статичным IP компа, на котором будем тестить.
 
-
-2. Делаем ssh-ключ на rpi
-
-    Ситуация похожая с WiFi: много гайдов, вот официальный:
-    https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
-
-3. Делаем ssh-ключ на Raspberry Pi
+2. Делаем ssh-ключ на Raspberry Pi
 
     А теперь нужно сделать ssh-доступ по ключу. Вот гайд:
     https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md
 
 
-4. Делаем ssh-хост на админском компе (Linux, OSX)
+3. Делаем ssh-хост на админском компе (Linux, OSX)
 
     Вот хороший гайд про то, как это в принципе делать:
     https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client

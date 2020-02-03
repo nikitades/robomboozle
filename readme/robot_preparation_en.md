@@ -1,42 +1,36 @@
-# Подготовка к установке и запуску
+# Preparing for the installation and launch.
 
-## Вам понадобится
+## You will need
 
-1. ПК под управлением Linux/OSX (под Windows тоже можно, но тогде деплоить ПО на Raspberry придется как-то вручную. Putty все дела)
-2. Установленная среда Node.js, а также npm и ssh
-3. Wi-Fi в том помещении, где вы собираетесь гонять робота
-4. Raspbian на Raspberry Pi (гайд сделан для него; нет ничего неразрешимого на других дистрах, но построчное копирование команд тогда просто не сработает)
+1. A PC with linux/OSX onboard (Windows is also OK, but then you'll have to deploy the software manually, with Putty probably)
+2. Installed Node.js environment, and also npm and ssh
+3. The Wi-Fi covering the place where you are going to run the robot
+4. Raspbian installed on RPI (this guide is for the Raspbian; there is nothing unsolvable for the other guides, but then line-by-line copying just will not work)
     
     
-## Настройка Raspberry Pi
+## RPI Setup
 
-1. Подключить RPI к WiFi
+1. Connect RPI to Wi-Fi
 
-    Нужно чтобы RPI ловила вайфай автоматически (тот на который вы её настроите). Существует очень много гайдов, вот вам официальный:
+    It's necessary for RPI to connect to Wi-Fi automatically (to the one you'll set it up). There is a plenty of guides, so here is the official one:
     https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
 
-    Хорошая идея сделать также статичным IP Raspberry Pi (на уровне роутера либо настроек аренды linux). Можно также сделать статичным IP компа, на котором будем тестить.
+    It's a good idea to make RPI's IP adress static. And also the IP of the PC from which you are going to control the robot.
 
+2. Create the SSH key on RPI
 
-2. Делаем ssh-ключ на rpi
-
-    Ситуация похожая с WiFi: много гайдов, вот официальный:
-    https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
-
-3. Делаем ssh-ключ на Raspberry Pi
-
-    А теперь нужно сделать ssh-доступ по ключу. Вот гайд:
+    Now we have to create the SSH access via the key. Here is the guide:
     https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md
 
 
-4. Делаем ssh-хост на админском компе (Linux, OSX)
+3. Create the SSH host on the admin's PC (Linux, OSX)
 
-    Вот хороший гайд про то, как это в принципе делать:
+    Here is a good guide of how it's done:
     https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client
 
-    Что требуется: нужно чтобы на вашем компе образовался ssh-хост под именем `pi`. Чтобы команда `ssh pi` в терминале сразу же открывала терминал до RPI.
+    What is required: you have to be able to connect the RPI via the simple command: `ssh pi`. It means that you have to create the SSH host with the name `pi`.
 
-    Вам понадобится IP-адрес RPI, имя пользователя (для Raspbian по умолчанию это pi) и ssh-ключ, который вы сделали на предыдущем шаге. И, я надеюсь, вы закинули публичный отпечаток ключа в known_hosts на RPI.
-
-    Пример заполненого хоста можно найти в файле `exampleSSHConfig.txt` в этом репозитории.
+    You will need the IP address of RPI, the user name (Raspbian's default user name is pi) and the SSH key you have created the step before. I also assume you've already sent the public fingerprint of the key to RPI.
+    
+    The example a filled SSH host could be found in the `exampleSSHConfig.txt` in this repo.
 
