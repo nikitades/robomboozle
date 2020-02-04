@@ -44,6 +44,15 @@ class ModeSelector extends React.Component {
                         </div>
                     </div>
                 </div>
+                <div className="has-text-centered">
+                    <a href="https://github.com/nikitades/robomboozle">
+                        <img src="https://img.shields.io/github/watchers/nikitades/robomboozle?label=Watch&style=social" />
+                    </a>
+                    &nbsp;
+                    <a href="https://raspberrypi.org">
+                        <img src="https://img.shields.io/badge/raspberry-pi-red" />
+                    </a>
+                </div>
             </div>
         </div>
     }
