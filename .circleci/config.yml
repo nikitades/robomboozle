@@ -55,7 +55,7 @@ jobs:
       - image: circleci/buildpack-deps:stretch
     steps:
       - run: |
-          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "sudo docker rmi $(docker image ls | grep nikitades/robomboozle-server:*)"
+          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "sudo docker rmi $(docker image ls | grep nikitades/robomboozle-server:*)" || true
           ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "sudo docker service update --image $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_BRANCH-$CIRCLE_SHA1 ${SERVICE_NAME}"
 workflows:
   version: 2
