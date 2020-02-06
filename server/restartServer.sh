@@ -13,5 +13,5 @@ echo $CIRCLE_SHA1 >> ~/1.txt
 echo $SERVICE_NAME >> ~/1.txt
 cat ~/1.txt
 docker image ls | grep "$DOCKERHUB_USERNAME"/"$DOCKER_IMAGE_NAME":*
-docker rmi $(docker image ls | "$DOCKERHUB_USERNAME"/"$DOCKER_IMAGE_NAME")
+docker rmi $(docker images | grep "$DOCKERHUB_USERNAME"/"$DOCKER_IMAGE_NAME" | awk '{print $1":"$2}')
 docker service update --image "$DOCKERHUB_USERNAME"/"$DOCKER_IMAGE_NAME":"$CIRCLE_BRANCH"-"$CIRCLE_SHA1" "$SERVICE_NAME"
