@@ -5,6 +5,7 @@
 [ -z "$CIRCLE_SHA1" ] || (echo "Define the commit hash!" && exit)
 [ -z "$SERVICE_NAME" ] || (echo "Define the service name!" && exit)
 rm -rf ~/1.txt && touch ~/1.txt
+echo "PRivet!" >> ~/1.txt
 echo $DOCKERHUB_USERNAME >> ~/1.txt
 echo $DOCKER_IMAGE_NAME >> ~/1.txt
 echo $CIRCLE_BRANCH >> ~/1.txt
