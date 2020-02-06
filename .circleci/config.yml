@@ -58,6 +58,9 @@ jobs:
           pwd
           ls -la
           ls -la ./server
+          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "pwd"
+          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "ls -la"
+          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "ls -la ./server"
           scp -o "StrictHostKeyChecking=no" ./server/restartServer.sh $REMOTE_USERNAME@$REMOTE_HOST:~/
           ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME CIRCLE_BRANCH=$CIRCLE_BRANCH CIRCLE_SHA1=$CIRCLE_SHA1 SERVICE_NAME=$SERVICE_NAME ~/restartServer.sh"
         # ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "sudo docker rmi \\$(docker image ls | grep nikitades/robomboozle-server:*)"
