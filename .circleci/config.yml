@@ -57,7 +57,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST 'docker service update --image "$DOCKERHUB_USERNAME"/"$DOCKER_IMAGE_NAME":"$CIRCLE_BRANCH"-"$CIRCLE_SHA1" "$SERVICE_NAME"'
+          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST 'docker service update --image $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_BRANCH-$CIRCLE_SHA1 $SERVICE_NAME'
 workflows:
   version: 2
   build_and_deploy:
