@@ -59,7 +59,7 @@ jobs:
       - run: |
           ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST 'docker images | grep "$DOCKERHUB_USERNAME"/"$DOCKER_IMAGE_NAME"' >> images.txt
           cat images.txt | awk '{print $1":"$2}' >> filtered_images.txt
-          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST 'docker rmi $(cat filtered_images.txt)'
+          ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST 'docker rmi $(cat filtered_images.txt)' || true
           ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST 'docker service update --image "$DOCKERHUB_USERNAME"/"$DOCKER_IMAGE_NAME":"$CIRCLE_BRANCH"-"$CIRCLE_SHA1" "$SERVICE_NAME"'
 workflows:
   version: 2
