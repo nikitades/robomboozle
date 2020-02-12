@@ -4,6 +4,11 @@
 
 ---
 
+## Demo: [https://robomboozle.ru](https://robomboozle.ru)
+_(Requires the password)_
+
+---
+
 # EN
 
 ## A bunch of software (and an assembly guide) to control a small Raspberry Pi based robot to play with cats
