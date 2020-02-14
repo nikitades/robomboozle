@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf ./dist/*",
-    "compile": "tsc server.ts --outDir dist",
+    "compile": "tsc server.ts --outDir dist --sourceMap",
     "start": "node dist/server.js",
     "build": "npm run clean && npm run compile",
     "debug": "npm run clean && npm run compile && npm run start"
