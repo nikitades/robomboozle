@@ -22,7 +22,7 @@
     "onoff": "^5.0.0",
     "pigpio": "^2.0.1",
     "pigpio-l298n": "0.0.3",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "socket.io-client": "^2.3.0",
     "stream-split": "^1.1.0"
   }
