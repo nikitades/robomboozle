@@ -19,7 +19,7 @@
     "@types/socket.io": "^2.1.4",
     "argparse": "^1.0.10",
     "express": "^4.17.1",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "stream-split": "^1.1.0",
     "typescript": "^3.7.5"
   }
